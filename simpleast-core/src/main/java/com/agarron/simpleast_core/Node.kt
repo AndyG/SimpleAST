@@ -1,4 +1,4 @@
-package com.agarron.simpleast_core
+package com.agarron.simpleastcore
 
 import android.text.style.CharacterStyle
 import java.util.*

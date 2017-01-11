@@ -1,7 +1,4 @@
-package com.agarron.simpleast_core
-
-import com.agarron.simpleast_core.Node
-import com.agarron.simpleast_core.Parent
+package com.agarron.simpleastcore
 
 class ASTUtils {
     companion object {

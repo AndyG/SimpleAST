@@ -1,4 +1,4 @@
-package com.agarron.simpleast_core;
+package com.agarron.simpleastcore;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

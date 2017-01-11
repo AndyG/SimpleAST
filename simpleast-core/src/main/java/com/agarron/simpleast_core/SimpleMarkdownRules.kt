@@ -1,5 +1,5 @@
 @file:JvmName("SimpleMarkdownRules")
-package com.agarron.simpleast_core
+package com.agarron.simpleastcore
 
 import android.graphics.Typeface
 import android.text.style.StrikethroughSpan

@@ -1,6 +1,5 @@
-package com.agarron.simpleast_core
+package com.agarron.simpleastcore
 
-import com.agarron.simpleast_core.Node
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
