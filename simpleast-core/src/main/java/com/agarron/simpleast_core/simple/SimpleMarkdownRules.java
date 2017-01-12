@@ -6,7 +6,7 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 
-import com.agarron.simpleast_core.builder.ASTBuilderJava;
+import com.agarron.simpleast_core.builder.ASTBuilder;
 import com.agarron.simpleast_core.node.Node;
 import com.agarron.simpleast_core.node.StyleNode;
 import com.agarron.simpleast_core.node.TextNode;
@@ -39,47 +39,47 @@ public class SimpleMarkdownRules {
         "[^\\s\\*])\\*(?!\\*)"
     );
 
-    public static ASTBuilderJava.Rule RULE_BOLD = createSimpleStyleRule(PATTERN_BOLD, new StyleFactory() {
+    public static ASTBuilder.Rule RULE_BOLD = createSimpleStyleRule(PATTERN_BOLD, new StyleFactory() {
         @Override
         public CharacterStyle get() {
             return new StyleSpan(Typeface.BOLD);
         }
     });
 
-    public static ASTBuilderJava.Rule RULE_UNDERLINE = createSimpleStyleRule(PATTERN_UNDERLINE, new StyleFactory() {
+    public static ASTBuilder.Rule RULE_UNDERLINE = createSimpleStyleRule(PATTERN_UNDERLINE, new StyleFactory() {
         @Override
         public CharacterStyle get() {
             return new UnderlineSpan();
         }
     });
 
-    public static ASTBuilderJava.Rule RULE_STRIKETHRU = createSimpleStyleRule(PATTERN_STRIKETHRU, new StyleFactory() {
+    public static ASTBuilder.Rule RULE_STRIKETHRU = createSimpleStyleRule(PATTERN_STRIKETHRU, new StyleFactory() {
         @Override
         public CharacterStyle get() {
             return new StrikethroughSpan();
         }
     });
 
-    public static ASTBuilderJava.Rule RULE_TEXT = new ASTBuilderJava.Rule() {
+    public static ASTBuilder.Rule RULE_TEXT = new ASTBuilder.Rule() {
         @Override
         public Pattern getPattern() {
             return PATTERN_TEXT;
         }
 
         @Override
-        public Node parse(final Matcher matcher, final ASTBuilderJava astBuilder) {
+        public Node parse(final Matcher matcher, final ASTBuilder astBuilder) {
             return new TextNode(matcher.group());
         }
     };
 
-    public static ASTBuilderJava.Rule RULE_ITALICS = new ASTBuilderJava.Rule() {
+    public static ASTBuilder.Rule RULE_ITALICS = new ASTBuilder.Rule() {
         @Override
         public Pattern getPattern() {
             return PATTERN_ITALICS;
         }
 
         @Override
-        public Node parse(final Matcher matcher, final ASTBuilderJava astBuilder) {
+        public Node parse(final Matcher matcher, final ASTBuilder astBuilder) {
             final String match;
             final String asteriskMatch = matcher.group(2);
             if (asteriskMatch != null && asteriskMatch.length() > 0) {
@@ -94,15 +94,15 @@ public class SimpleMarkdownRules {
         }
     };
 
-    private static ASTBuilderJava.Rule createSimpleStyleRule(final Pattern pattern, final StyleFactory styleFactory) {
-        return new ASTBuilderJava.Rule() {
+    private static ASTBuilder.Rule createSimpleStyleRule(final Pattern pattern, final StyleFactory styleFactory) {
+        return new ASTBuilder.Rule() {
             @Override
             public Pattern getPattern() {
                 return pattern;
             }
 
             @Override
-            public Node parse(Matcher matcher, ASTBuilderJava astBuilder) {
+            public Node parse(Matcher matcher, ASTBuilder astBuilder) {
                 return new StyleNode(Collections.singleton(styleFactory.get()), astBuilder.parse(matcher.group(1)));
             }
         };
