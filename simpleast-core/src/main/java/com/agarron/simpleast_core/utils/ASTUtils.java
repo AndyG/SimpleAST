@@ -21,8 +21,4 @@ public class ASTUtils {
 
         nodeProcessor.processNode(node);
     }
-
-    interface NodeProcessor {
-        void processNode(Node node);
-    }
 }

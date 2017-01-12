@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/angarron/chipsview'
     gitUrl = 'https://github.com/angarron/chipsview.git'
 
-    libraryVersion = '0.1.2'
+    libraryVersion = '0.1.3'
 
     developerId = 'angarron'
     developerName = 'Anderson Garron'
@@ -31,8 +31,8 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 3
-        versionName "0.1.2"
+        versionCode 4
+        versionName "0.1.3"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
