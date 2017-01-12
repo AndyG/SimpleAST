@@ -4,6 +4,7 @@ package com.agarron.simpleast_core.builder;
 import com.agarron.simpleast_core.node.Node;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,6 +14,12 @@ public class ASTBuilder {
 
     public void addRule(final Rule rule) {
         rules.add(rule);
+    }
+
+    public void addRules(final Collection<Rule> rules) {
+        for (final Rule rule : rules) {
+            addRule(rule);
+        }
     }
 
     public List<Node> parse(final CharSequence source) {
