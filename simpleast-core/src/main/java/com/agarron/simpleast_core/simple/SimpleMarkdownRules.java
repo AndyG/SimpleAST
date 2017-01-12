@@ -14,6 +14,7 @@ import com.agarron.simpleast_core.node.TextNode;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -93,6 +94,16 @@ public class SimpleMarkdownRules {
             return new StyleNode(styles, astBuilder.parse(match));
         }
     };
+
+    public static List<ASTBuilder.Rule> getSimpleMarkdownRules() {
+        final List<ASTBuilder.Rule> rules = new ArrayList<>();
+        rules.add(RULE_BOLD);
+        rules.add(RULE_UNDERLINE);
+        rules.add(RULE_ITALICS);
+        rules.add(RULE_STRIKETHRU);
+        rules.add(RULE_TEXT);
+        return rules;
+    }
 
     private static ASTBuilder.Rule createSimpleStyleRule(final Pattern pattern, final StyleFactory styleFactory) {
         return new ASTBuilder.Rule() {
