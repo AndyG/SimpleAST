@@ -6,7 +6,7 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 
-import com.agarron.simpleast_core.builder.ASTBuilder;
+import com.agarron.simpleast_core.builder.Parser;
 import com.agarron.simpleast_core.node.Node;
 import com.agarron.simpleast_core.node.StyleNode;
 import com.agarron.simpleast_core.node.TextNode;
@@ -40,47 +40,47 @@ public class SimpleMarkdownRules {
         "[^\\s\\*])\\*(?!\\*)"
     );
 
-    public static ASTBuilder.Rule RULE_BOLD = createSimpleStyleRule(PATTERN_BOLD, new StyleFactory() {
+    public static Parser.Rule RULE_BOLD = createSimpleStyleRule(PATTERN_BOLD, new StyleFactory() {
         @Override
         public CharacterStyle get() {
             return new StyleSpan(Typeface.BOLD);
         }
     });
 
-    public static ASTBuilder.Rule RULE_UNDERLINE = createSimpleStyleRule(PATTERN_UNDERLINE, new StyleFactory() {
+    public static Parser.Rule RULE_UNDERLINE = createSimpleStyleRule(PATTERN_UNDERLINE, new StyleFactory() {
         @Override
         public CharacterStyle get() {
             return new UnderlineSpan();
         }
     });
 
-    public static ASTBuilder.Rule RULE_STRIKETHRU = createSimpleStyleRule(PATTERN_STRIKETHRU, new StyleFactory() {
+    public static Parser.Rule RULE_STRIKETHRU = createSimpleStyleRule(PATTERN_STRIKETHRU, new StyleFactory() {
         @Override
         public CharacterStyle get() {
             return new StrikethroughSpan();
         }
     });
 
-    public static ASTBuilder.Rule RULE_TEXT = new ASTBuilder.Rule() {
+    public static Parser.Rule RULE_TEXT = new Parser.Rule() {
         @Override
         public Pattern getPattern() {
             return PATTERN_TEXT;
         }
 
         @Override
-        public Node parse(final Matcher matcher, final ASTBuilder astBuilder) {
+        public Node parse(final Matcher matcher, final Parser parser) {
             return new TextNode(matcher.group());
         }
     };
 
-    public static ASTBuilder.Rule RULE_ITALICS = new ASTBuilder.Rule() {
+    public static Parser.Rule RULE_ITALICS = new Parser.Rule() {
         @Override
         public Pattern getPattern() {
             return PATTERN_ITALICS;
         }
 
         @Override
-        public Node parse(final Matcher matcher, final ASTBuilder astBuilder) {
+        public Node parse(final Matcher matcher, final Parser parser) {
             final String match;
             final String asteriskMatch = matcher.group(2);
             if (asteriskMatch != null && asteriskMatch.length() > 0) {
@@ -91,12 +91,12 @@ public class SimpleMarkdownRules {
 
             final Collection<CharacterStyle> styles = new ArrayList<>(1);
             styles.add(new StyleSpan(Typeface.ITALIC));
-            return new StyleNode(styles, astBuilder.parse(match));
+            return new StyleNode(styles, parser.parse(match));
         }
     };
 
-    public static List<ASTBuilder.Rule> getSimpleMarkdownRules() {
-        final List<ASTBuilder.Rule> rules = new ArrayList<>();
+    public static List<Parser.Rule> getSimpleMarkdownRules() {
+        final List<Parser.Rule> rules = new ArrayList<>();
         rules.add(RULE_BOLD);
         rules.add(RULE_UNDERLINE);
         rules.add(RULE_ITALICS);
@@ -105,16 +105,16 @@ public class SimpleMarkdownRules {
         return rules;
     }
 
-    private static ASTBuilder.Rule createSimpleStyleRule(final Pattern pattern, final StyleFactory styleFactory) {
-        return new ASTBuilder.Rule() {
+    private static Parser.Rule createSimpleStyleRule(final Pattern pattern, final StyleFactory styleFactory) {
+        return new Parser.Rule() {
             @Override
             public Pattern getPattern() {
                 return pattern;
             }
 
             @Override
-            public Node parse(Matcher matcher, ASTBuilder astBuilder) {
-                return new StyleNode(Collections.singleton(styleFactory.get()), astBuilder.parse(matcher.group(1)));
+            public Node parse(Matcher matcher, Parser parser) {
+                return new StyleNode(Collections.singleton(styleFactory.get()), parser.parse(matcher.group(1)));
             }
         };
     }

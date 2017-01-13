@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ASTBuilder {
+public class Parser {
+
     private final List<Rule> rules = new ArrayList<>();
 
     public void addRule(final Rule rule) {
@@ -52,6 +53,6 @@ public class ASTBuilder {
 
     public interface Rule {
         Pattern getPattern();
-        Node parse(Matcher matcher, ASTBuilder astBuilder);
+        Node parse(Matcher matcher, Parser parser);
     }
 }

@@ -4,7 +4,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.CharacterStyle;
 
-import com.agarron.simpleast_core.builder.ASTBuilder;
+import com.agarron.simpleast_core.builder.Parser;
 import com.agarron.simpleast_core.node.Node;
 import com.agarron.simpleast_core.node.StyleNode;
 import com.agarron.simpleast_core.node.TextNode;
@@ -17,9 +17,9 @@ public class SimpleRenderer {
         return render(source, SimpleMarkdownRules.getSimpleMarkdownRules());
     }
 
-    public static SpannableStringBuilder render(final CharSequence source, final Collection<ASTBuilder.Rule> rules) {
-        final ASTBuilder parser = new ASTBuilder();
-        for (final ASTBuilder.Rule rule : rules) {
+    public static SpannableStringBuilder render(final CharSequence source, final Collection<Parser.Rule> rules) {
+        final Parser parser = new Parser();
+        for (final Parser.Rule rule : rules) {
             parser.addRule(rule);
         }
 
