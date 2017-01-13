@@ -23,6 +23,7 @@ public class SimpleMarkdownRules {
     public static Pattern PATTERN_UNDERLINE = Pattern.compile("^__([\\s\\S]+?)__(?!_)");
     public static Pattern PATTERN_STRIKETHRU = Pattern.compile("^~~(?=\\S)([\\s\\S]*?\\S)~~");
     public static Pattern PATTERN_TEXT = Pattern.compile("^[\\s\\S]+?(?=[^0-9A-Za-z\\s\\u00c0-\\uffff]|\\n\\n| {2,}\\n|\\w+:\\S|$)");
+    public static final Pattern PATTERN_ESCAPE = Pattern.compile("^\\\\([^0-9A-Za-z\\s])");
 
     public static Pattern PATTERN_ITALICS = Pattern.compile(
         // only match _s surrounding words.
@@ -73,6 +74,18 @@ public class SimpleMarkdownRules {
         }
     };
 
+    public static Parser.Rule RULE_ESCAPE = new Parser.Rule() {
+        @Override
+        public Pattern getPattern() {
+            return PATTERN_ESCAPE;
+        }
+
+        @Override
+        public Node parse(Matcher matcher, Parser parser) {
+            return new TextNode(matcher.group(1));
+        }
+    };
+
     public static Parser.Rule RULE_ITALICS = new Parser.Rule() {
         @Override
         public Pattern getPattern() {
@@ -97,6 +110,7 @@ public class SimpleMarkdownRules {
 
     public static List<Parser.Rule> getSimpleMarkdownRules() {
         final List<Parser.Rule> rules = new ArrayList<>();
+        rules.add(RULE_ESCAPE);
         rules.add(RULE_BOLD);
         rules.add(RULE_UNDERLINE);
         rules.add(RULE_ITALICS);
