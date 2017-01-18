@@ -6,28 +6,19 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class StyleNode extends Node implements Parent {
+public class StyleNode implements Node, Parent {
 
     public static final String TYPE = "style";
 
     public static StyleNode createWithText(final String content, final List<CharacterStyle> styles) {
-        return createWithText(TYPE, content, styles);
-    }
-
-    public static StyleNode createWithText(final String type, final String content, final List<CharacterStyle> styles) {
         final Node textNode = new TextNode(content);
-        return new StyleNode(type, styles, Collections.singletonList(textNode));
+        return new StyleNode(styles, Collections.singletonList(textNode));
     }
 
     private final List<Node> children;
     private final Collection<CharacterStyle> styles;
 
     public StyleNode(final Collection<CharacterStyle> styles, final List<Node> children) {
-        this(TYPE, styles, children);
-    }
-
-    public StyleNode(final String type, final Collection<CharacterStyle> styles, final List<Node> children) {
-        super(type);
         this.styles = styles;
         this.children = children;
     }
@@ -39,5 +30,10 @@ public class StyleNode extends Node implements Parent {
 
     public Collection<CharacterStyle> getStyles() {
         return styles;
+    }
+
+    @Override
+    public String getType() {
+        return TYPE;
     }
 }
