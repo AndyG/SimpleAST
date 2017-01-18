@@ -13,14 +13,23 @@ public class Parser {
 
     private final List<Rule> rules = new ArrayList<>();
 
-    public void addRule(final Rule rule) {
+    public Parser addRule(final Rule rule) {
         rules.add(rule);
+        return this;
     }
 
-    public void addRules(final Collection<Rule> rules) {
+    public Parser addRules(final Collection<Rule> rules) {
         for (final Rule rule : rules) {
             addRule(rule);
         }
+        return this;
+    }
+
+    public Parser addRules(final Rule... rules) {
+        for (final Rule rule : rules) {
+            addRule(rule);
+        }
+        return this;
     }
 
     public List<Node> parse(final CharSequence source) {
