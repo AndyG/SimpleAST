@@ -1,6 +1,11 @@
 package com.agarron.simpleast_core.node;
 
-public class TextNode implements Node {
+import android.content.Context;
+import android.text.SpannableStringBuilder;
+
+import com.agarron.simpleast_core.simple.SpannableRenderable;
+
+public class TextNode implements Node, SpannableRenderable {
 
     public static final String TYPE = "text";
 
@@ -17,5 +22,10 @@ public class TextNode implements Node {
     @Override
     public String getType() {
         return TYPE;
+    }
+
+    @Override
+    public void render(final SpannableStringBuilder builder, final Context context) {
+        builder.append(content);
     }
 }
