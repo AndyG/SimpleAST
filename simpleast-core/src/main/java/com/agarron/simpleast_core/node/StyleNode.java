@@ -8,8 +8,10 @@ import java.util.List;
 
 public class StyleNode extends Node implements Parent {
 
+    public static final String TYPE = "style";
+
     public static StyleNode createWithText(final String content, final List<CharacterStyle> styles) {
-        return createWithText("style", content, styles);
+        return createWithText(TYPE, content, styles);
     }
 
     public static StyleNode createWithText(final String type, final String content, final List<CharacterStyle> styles) {
@@ -21,7 +23,7 @@ public class StyleNode extends Node implements Parent {
     private final Collection<CharacterStyle> styles;
 
     public StyleNode(final Collection<CharacterStyle> styles, final List<Node> children) {
-        this("style", styles, children);
+        this(TYPE, styles, children);
     }
 
     public StyleNode(final String type, final Collection<CharacterStyle> styles, final List<Node> children) {
