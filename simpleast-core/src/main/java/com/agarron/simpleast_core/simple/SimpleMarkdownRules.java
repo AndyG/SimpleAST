@@ -62,36 +62,21 @@ public class SimpleMarkdownRules {
         }
     });
 
-    public static Parser.Rule RULE_TEXT = new Parser.Rule() {
-        @Override
-        public Pattern getPattern() {
-            return PATTERN_TEXT;
-        }
-
+    public static Parser.Rule RULE_TEXT = new Parser.Rule(PATTERN_TEXT) {
         @Override
         public Node parse(final Matcher matcher, final Parser parser) {
             return new TextNode(matcher.group());
         }
     };
 
-    public static Parser.Rule RULE_ESCAPE = new Parser.Rule() {
-        @Override
-        public Pattern getPattern() {
-            return PATTERN_ESCAPE;
-        }
-
+    public static Parser.Rule RULE_ESCAPE = new Parser.Rule(PATTERN_ESCAPE) {
         @Override
         public Node parse(Matcher matcher, Parser parser) {
             return new TextNode(matcher.group(1));
         }
     };
 
-    public static Parser.Rule RULE_ITALICS = new Parser.Rule() {
-        @Override
-        public Pattern getPattern() {
-            return PATTERN_ITALICS;
-        }
-
+    public static Parser.Rule RULE_ITALICS = new Parser.Rule(PATTERN_ITALICS) {
         @Override
         public Node parse(final Matcher matcher, final Parser parser) {
             final String match;
@@ -120,12 +105,7 @@ public class SimpleMarkdownRules {
     }
 
     private static Parser.Rule createSimpleStyleRule(final Pattern pattern, final StyleFactory styleFactory) {
-        return new Parser.Rule() {
-            @Override
-            public Pattern getPattern() {
-                return pattern;
-            }
-
+        return new Parser.Rule(pattern) {
             @Override
             public Node parse(Matcher matcher, Parser parser) {
                 return new StyleNode(Collections.singleton(styleFactory.get()), parser.parse(matcher.group(1)));

@@ -40,7 +40,7 @@ public class Parser {
             boolean foundRule = false;
 
             for (final Rule rule : rules) {
-                final Matcher matcher = rule.getPattern().matcher(mutableSource);
+                final Matcher matcher = rule.pattern.matcher(mutableSource);
                 if (matcher.find()) {
                     final String match = matcher.group();
                     mutableSource = mutableSource.subSequence(match.length(), mutableSource.length());
@@ -60,8 +60,14 @@ public class Parser {
         return result;
     }
 
-    public interface Rule {
-        Pattern getPattern();
-        Node parse(Matcher matcher, Parser parser);
+    public static abstract class Rule {
+
+        private final Pattern pattern;
+
+        public Rule(final Pattern pattern) {
+            this.pattern = pattern;
+        }
+
+        public abstract Node parse(Matcher matcher, Parser parser);
     }
 }
