@@ -1,6 +1,8 @@
 package com.agarron.simpleast_core.builder;
 
 
+import android.util.Log;
+
 import com.agarron.simpleast_core.node.Node;
 
 import java.util.ArrayList;
@@ -32,28 +34,39 @@ public class Parser {
         return this;
     }
 
-    public List<Node> parse(final CharSequence source) {
-        final List<Node> result = new ArrayList<>();
-        CharSequence mutableSource = source;
+    public List<Node> safeParse(CharSequence source) {
+        try {
+            return parse(source, 0);
+        } catch (StackOverflowError e) {
+            Log.d("findme", "caught StackOverflowError", e);
+        }
 
-        while (mutableSource.length() > 0) {
+        return null;
+    }
+
+    public List<Node> parse(CharSequence source, final int depth) {
+        Log.d("findme", "called parse with depth: " + depth);
+
+        final List<Node> result = new ArrayList<>();
+
+        while (source.length() > 0) {
             boolean foundRule = false;
 
             for (final Rule rule : rules) {
-                final Matcher matcher = rule.pattern.matcher(mutableSource);
+                final Matcher matcher = rule.pattern.matcher(source);
                 if (matcher.find()) {
                     final String match = matcher.group();
-                    mutableSource = mutableSource.subSequence(match.length(), mutableSource.length());
+                    source = source.subSequence(match.length(), source.length());
                     foundRule = true;
 
-                    final Node node = rule.parse(matcher, this);
+                    final Node node = rule.parse(matcher, this, depth);
                     result.add(node);
                     break;
                 }
             }
 
             if (!foundRule) {
-                throw new RuntimeException("failed to find rule to match source: " + mutableSource);
+                throw new RuntimeException("failed to find rule to match source: " + source);
             }
         }
 
@@ -68,6 +81,6 @@ public class Parser {
             this.pattern = pattern;
         }
 
-        public abstract Node parse(Matcher matcher, Parser parser);
+        public abstract Node parse(Matcher matcher, Parser parser, final int depth);
     }
 }

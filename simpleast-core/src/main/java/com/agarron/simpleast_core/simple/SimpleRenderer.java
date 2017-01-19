@@ -23,7 +23,7 @@ public class SimpleRenderer {
             parser.addRule(rule);
         }
 
-        return render(parser.parse(source));
+        return render(parser.parse(source, 0));
     }
 
     public static SpannableStringBuilder render(final Collection<Node> ast) {

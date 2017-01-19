@@ -64,21 +64,21 @@ public class SimpleMarkdownRules {
 
     public static Parser.Rule RULE_TEXT = new Parser.Rule(PATTERN_TEXT) {
         @Override
-        public Node parse(final Matcher matcher, final Parser parser) {
+        public Node parse(final Matcher matcher, final Parser parser, final int depth) {
             return new TextNode(matcher.group());
         }
     };
 
     public static Parser.Rule RULE_ESCAPE = new Parser.Rule(PATTERN_ESCAPE) {
         @Override
-        public Node parse(Matcher matcher, Parser parser) {
+        public Node parse(Matcher matcher, Parser parser, final int depth) {
             return new TextNode(matcher.group(1));
         }
     };
 
     public static Parser.Rule RULE_ITALICS = new Parser.Rule(PATTERN_ITALICS) {
         @Override
-        public Node parse(final Matcher matcher, final Parser parser) {
+        public Node parse(final Matcher matcher, final Parser parser, final int depth) {
             final String match;
             final String asteriskMatch = matcher.group(2);
             if (asteriskMatch != null && asteriskMatch.length() > 0) {
@@ -89,7 +89,7 @@ public class SimpleMarkdownRules {
 
             final Collection<CharacterStyle> styles = new ArrayList<>(1);
             styles.add(new StyleSpan(Typeface.ITALIC));
-            return new StyleNode(styles, parser.parse(match));
+            return new StyleNode(styles, parser.parse(match, depth + 1));
         }
     };
 
@@ -107,8 +107,8 @@ public class SimpleMarkdownRules {
     private static Parser.Rule createSimpleStyleRule(final Pattern pattern, final StyleFactory styleFactory) {
         return new Parser.Rule(pattern) {
             @Override
-            public Node parse(Matcher matcher, Parser parser) {
-                return new StyleNode(Collections.singleton(styleFactory.get()), parser.parse(matcher.group(1)));
+            public Node parse(Matcher matcher, Parser parser, int depth) {
+                return new StyleNode(Collections.singleton(styleFactory.get()), parser.parse(matcher.group(1), depth + 1));
             }
         };
     }
