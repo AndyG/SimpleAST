@@ -63,21 +63,21 @@ public class SimpleMarkdownRules {
 
     public static Parser.Rule RULE_TEXT = new Parser.Rule(PATTERN_TEXT) {
         @Override
-        public Parser.NodeBuilder parse(Matcher matcher) {
-            return new Parser.NodeBuilder(new TextNode(matcher.group()), matcher.start(), matcher.end());
+        public Parser.SubtreeSpec parse(Matcher matcher) {
+            return Parser.SubtreeSpec.createTerminal(new TextNode(matcher.group()));
         }
     };
 
     public static Parser.Rule RULE_ESCAPE = new Parser.Rule(PATTERN_ESCAPE) {
         @Override
-        public Parser.NodeBuilder parse(Matcher matcher) {
-            return new Parser.NodeBuilder(new TextNode(matcher.group(1)), matcher.start(), matcher.end());
+        public Parser.SubtreeSpec parse(Matcher matcher) {
+            return Parser.SubtreeSpec.createTerminal(new TextNode(matcher.group(1)));
         }
     };
 
     public static Parser.Rule RULE_ITALICS = new Parser.Rule(PATTERN_ITALICS) {
         @Override
-        public Parser.NodeBuilder parse(final Matcher matcher) {
+        public Parser.SubtreeSpec parse(final Matcher matcher) {
             final int startIndex, endIndex;
             final String asteriskMatch = matcher.group(2);
             if (asteriskMatch != null && asteriskMatch.length() > 0) {
@@ -92,7 +92,7 @@ public class SimpleMarkdownRules {
             styles.add(new StyleSpan(Typeface.ITALIC));
             final StyleNode node = new StyleNode(styles);
 
-            return new Parser.NodeBuilder(node, startIndex, endIndex);
+            return Parser.SubtreeSpec.createNonterminal(node, startIndex, endIndex);
         }
     };
 
@@ -110,9 +110,9 @@ public class SimpleMarkdownRules {
     private static Parser.Rule createSimpleStyleRule(final Pattern pattern, final StyleFactory styleFactory) {
         return new Parser.Rule(pattern) {
             @Override
-            public Parser.NodeBuilder parse(Matcher matcher) {
+            public Parser.SubtreeSpec parse(Matcher matcher) {
                 StyleNode node = new StyleNode(Collections.singleton(styleFactory.get()));
-                return new Parser.NodeBuilder(node, matcher.start(1), matcher.end(1));
+                return Parser.SubtreeSpec.createNonterminal(node, matcher.start(1), matcher.end(1));
             }
         };
     }

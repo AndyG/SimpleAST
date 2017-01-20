@@ -34,13 +34,13 @@ public class Parser {
     }
 
     public List<Node> parse(final CharSequence source) {
-        final Stack<NodeBuilder> stack = new Stack<>();
+        final Stack<SubtreeSpec> stack = new Stack<>();
         final Root root = new Root();
-        stack.add(new NodeBuilder(root, 0, source.length()));
+        stack.add(new SubtreeSpec(root, 0, source.length()));
 
         while (!stack.isEmpty()) {
 
-            final NodeBuilder builder = stack.pop();
+            final SubtreeSpec builder = stack.pop();
 
             if (builder.startIndex >= builder.endIndex) {
                 break;
@@ -57,12 +57,12 @@ public class Parser {
                 if (matcher.find()) {
                     foundRule = true;
 
-                    if (builder.node instanceof Parent) {
+                    if (!builder.isTerminal) {
 
-                        final NodeBuilder newBuilder = rule.parse(matcher);
-                        newBuilder.applyOffset(offset);
+                        final SubtreeSpec newBuilder = rule.parse(matcher);
 
-                        if (newBuilder.node instanceof Parent) {
+                        if (!newBuilder.isTerminal) {
+                            newBuilder.applyOffset(offset);
                             stack.push(newBuilder);
                         }
 
@@ -72,10 +72,10 @@ public class Parser {
                         final int matcherSourceEnd = matcher.end() + offset;
 
                         if (matcherSourceEnd != builder.endIndex) {
-                            stack.push(new NodeBuilder(builder.node, matcherSourceEnd, builder.endIndex));
+                            stack.push(new SubtreeSpec((Parent) builder.root, matcherSourceEnd, builder.endIndex));
                         }
 
-                        ((Parent) builder.node).addChild(newBuilder.node);
+                        ((Parent) builder.root).addChild(newBuilder.root);
                     }
 
                     break;
@@ -93,19 +93,37 @@ public class Parser {
     /**
      * Facilitates fast parsing of the source text.
      *
-     * The provided Node will be added to the tree, and text between startIndex (inclusive)
-     * and endIndex (exclusive) will continue to be parsed into Nodes and added as children under
-     * this Node.
+     * For nonterminal subtrees, the provided root will be added to the main, and text between
+     * startIndex (inclusive) and endIndex (exclusive) will continue to be parsed into Nodes and
+     * added as children under this root.
+     *
+     * For terminal subtrees, the root will simply be added to the tree and no additional parsing will
+     * take place on the text.
      */
-    public static class NodeBuilder {
-        private final Node node;
+    public static class SubtreeSpec {
+        private final Node root;
+        private final boolean isTerminal;
         private int startIndex;
         private int endIndex;
 
-        public NodeBuilder(Node node, int startIndex, int endIndex) {
-            this.node = node;
+        public static SubtreeSpec createNonterminal(Parent node, int startIndex, int endIndex) {
+            return new SubtreeSpec(node, startIndex, endIndex);
+        }
+
+        public static SubtreeSpec createTerminal(Node node) {
+            return new SubtreeSpec(node);
+        }
+
+        private SubtreeSpec(Parent root, int startIndex, int endIndex) {
+            this.root = root;
+            this.isTerminal = false;
             this.startIndex = startIndex;
             this.endIndex = endIndex;
+        }
+
+        private SubtreeSpec(Node root) {
+            this.root = root;
+            this.isTerminal = true;
         }
 
         private void applyOffset(final int offset) {
@@ -122,7 +140,7 @@ public class Parser {
             this.pattern = pattern;
         }
 
-        public abstract NodeBuilder parse(Matcher matcher);
+        public abstract SubtreeSpec parse(Matcher matcher);
     }
 
     private static class Root implements Parent {
