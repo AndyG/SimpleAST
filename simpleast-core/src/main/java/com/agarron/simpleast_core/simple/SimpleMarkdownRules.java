@@ -7,7 +7,6 @@ import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 
 import com.agarron.simpleast_core.builder.Parser;
-import com.agarron.simpleast_core.node.Node;
 import com.agarron.simpleast_core.node.StyleNode;
 import com.agarron.simpleast_core.node.TextNode;
 
@@ -64,32 +63,36 @@ public class SimpleMarkdownRules {
 
     public static Parser.Rule RULE_TEXT = new Parser.Rule(PATTERN_TEXT) {
         @Override
-        public Node parse(final Matcher matcher, final Parser parser, final int depth) {
-            return new TextNode(matcher.group());
+        public Parser.NodeBuilder parse(Matcher matcher) {
+            return new Parser.NodeBuilder(new TextNode(matcher.group()), 0, 0);
         }
     };
 
     public static Parser.Rule RULE_ESCAPE = new Parser.Rule(PATTERN_ESCAPE) {
         @Override
-        public Node parse(Matcher matcher, Parser parser, final int depth) {
-            return new TextNode(matcher.group(1));
+        public Parser.NodeBuilder parse(Matcher matcher) {
+            return new Parser.NodeBuilder(new TextNode(matcher.group(1)), 0, 0);
         }
     };
 
     public static Parser.Rule RULE_ITALICS = new Parser.Rule(PATTERN_ITALICS) {
         @Override
-        public Node parse(final Matcher matcher, final Parser parser, final int depth) {
-            final String match;
+        public Parser.NodeBuilder parse(final Matcher matcher) {
+            final int startIndex, endIndex;
             final String asteriskMatch = matcher.group(2);
             if (asteriskMatch != null && asteriskMatch.length() > 0) {
-                match = asteriskMatch;
+                startIndex = matcher.start(2);
+                endIndex = matcher.end(2);
             } else {
-                match = matcher.group(1);
+                startIndex = matcher.start(1);
+                endIndex = matcher.end(1);
             }
 
             final Collection<CharacterStyle> styles = new ArrayList<>(1);
             styles.add(new StyleSpan(Typeface.ITALIC));
-            return new StyleNode(styles, parser.parse(match, depth + 1));
+            final StyleNode node = new StyleNode(styles);
+
+            return new Parser.NodeBuilder(node, startIndex, endIndex);
         }
     };
 
@@ -107,8 +110,9 @@ public class SimpleMarkdownRules {
     private static Parser.Rule createSimpleStyleRule(final Pattern pattern, final StyleFactory styleFactory) {
         return new Parser.Rule(pattern) {
             @Override
-            public Node parse(Matcher matcher, Parser parser, int depth) {
-                return new StyleNode(Collections.singleton(styleFactory.get()), parser.parse(matcher.group(1), depth + 1));
+            public Parser.NodeBuilder parse(Matcher matcher) {
+                StyleNode node = new StyleNode(Collections.singleton(styleFactory.get()));
+                return new Parser.NodeBuilder(node, matcher.start(1), matcher.end(1));
             }
         };
     }

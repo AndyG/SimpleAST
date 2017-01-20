@@ -4,16 +4,28 @@ package com.agarron.simpleast_core.builder;
 import android.util.Log;
 
 import com.agarron.simpleast_core.node.Node;
+import com.agarron.simpleast_core.node.Parent;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
 
+    private final Root root = new Root();
+
+    private Stack<NodeBuilder> stack = new Stack<>();
+
     private final List<Rule> rules = new ArrayList<>();
+
+    private final CharSequence source;
+
+    public Parser(final CharSequence source) {
+        this.source = source;
+    }
 
     public Parser addRule(final Rule rule) {
         rules.add(rule);
@@ -34,43 +46,99 @@ public class Parser {
         return this;
     }
 
-    public List<Node> safeParse(CharSequence source) {
-        try {
-            return parse(source, 0);
-        } catch (StackOverflowError e) {
-            Log.d("findme", "caught StackOverflowError", e);
-        }
+//    public List<Node> safeParse(CharSequence source) {
+//        try {
+//            return parse(source, 0);
+//        } catch (StackOverflowError e) {
+//            Log.d("findme", "caught StackOverflowError", e);
+//        }
+//
+//        return null;
+//    }
 
-        return null;
-    }
+    public List<Node> iterativeParse() {
 
-    public List<Node> parse(CharSequence source, final int depth) {
-        Log.d("findme", "called parse with depth: " + depth);
+        stack.add(new NodeBuilder(root, 0, source.length()));
 
-        final List<Node> result = new ArrayList<>();
+        while (!stack.isEmpty()) {
 
-        while (source.length() > 0) {
+            Log.d("findme", "iterating with stack size: " + stack.size());
+
+            final NodeBuilder builder = stack.pop();
+
+            Log.d("findme", "builder: " + builder.startIndex + " -- " + builder.endIndex);
+
+            if (builder.startIndex >= builder.endIndex) {
+                break;
+            }
+
+            final CharSequence inspectionSource = source.subSequence(builder.startIndex, builder.endIndex);
+
             boolean foundRule = false;
-
             for (final Rule rule : rules) {
-                final Matcher matcher = rule.pattern.matcher(source);
+
+                final Matcher matcher = rule.pattern.matcher(inspectionSource);
+
                 if (matcher.find()) {
-                    final String match = matcher.group();
-                    source = source.subSequence(match.length(), source.length());
                     foundRule = true;
 
-                    final Node node = rule.parse(matcher, this, depth);
-                    result.add(node);
+                    if (builder.node instanceof Parent) {
+                        final NodeBuilder newBuilder = rule.parse(matcher);
+                        stack.add(newBuilder);
+                        ((Parent) builder.node).addChild(newBuilder.node);
+                    }
+
                     break;
                 }
             }
 
             if (!foundRule) {
-                throw new RuntimeException("failed to find rule to match source: " + source);
+                throw new RuntimeException("failed to find rule to match source: \"" + inspectionSource + "\"");
             }
         }
 
-        return result;
+        return root.getChildren();
+    }
+
+//    public List<Node> parse(CharSequence source, final int depth) {
+//        Log.d("findme", "called parse with depth: " + depth);
+//
+//        final List<Node> result = new ArrayList<>();
+//
+//        while (source.length() > 0) {
+//            boolean foundRule = false;
+//
+//            for (final Rule rule : rules) {
+//                final Matcher matcher = rule.pattern.matcher(source);
+//                if (matcher.find()) {
+//                    final String match = matcher.group();
+//                    source = source.subSequence(match.length(), source.length());
+//                    foundRule = true;
+//
+//                    final Node node = rule.parse(matcher, this, depth);
+//                    result.add(node);
+//                    break;
+//                }
+//            }
+//
+//            if (!foundRule) {
+//                throw new RuntimeException("failed to find rule to match source: " + source);
+//            }
+//        }
+//
+//        return result;
+//    }
+
+    public static class NodeBuilder {
+        private final Node node;
+        private final int startIndex;
+        private final int endIndex;
+
+        public NodeBuilder(Node node, int startIndex, int endIndex) {
+            this.node = node;
+            this.startIndex = startIndex;
+            this.endIndex = endIndex;
+        }
     }
 
     public static abstract class Rule {
@@ -81,6 +149,26 @@ public class Parser {
             this.pattern = pattern;
         }
 
-        public abstract Node parse(Matcher matcher, Parser parser, final int depth);
+        public abstract NodeBuilder parse(Matcher matcher);
+    }
+
+    private static class Root implements Parent {
+
+        private final List<Node> children = new ArrayList<>();
+
+        @Override
+        public String getType() {
+            return "root";
+        }
+
+        @Override
+        public List<Node> getChildren() {
+            return children;
+        }
+
+        @Override
+        public void addChild(Node child) {
+            children.add(child);
+        }
     }
 }

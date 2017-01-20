@@ -7,30 +7,30 @@ import android.text.style.CharacterStyle;
 
 import com.agarron.simpleast_core.simple.SpannableRenderable;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class StyleNode implements Node, Parent, SpannableRenderable {
 
     public static final String TYPE = "style";
 
-    public static StyleNode createWithText(final String content, final List<CharacterStyle> styles) {
-        final Node textNode = new TextNode(content);
-        return new StyleNode(styles, Collections.singletonList(textNode));
-    }
-
     private final List<Node> children;
     private final Collection<CharacterStyle> styles;
 
-    public StyleNode(final Collection<CharacterStyle> styles, final List<Node> children) {
+    public StyleNode(final Collection<CharacterStyle> styles) {
         this.styles = styles;
-        this.children = children;
+        this.children = new ArrayList<>();
     }
 
     @Override
     public List<Node> getChildren() {
         return children;
+    }
+
+    @Override
+    public void addChild(Node child) {
+        children.add(child);
     }
 
     public Collection<CharacterStyle> getStyles() {
