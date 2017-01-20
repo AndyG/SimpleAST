@@ -23,6 +23,12 @@
         android:hint="input"/>
 
     <Button
+        android:id="@+id/test_btn"
+        android:text="Parse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
         android:id="@+id/crash_btn"
         android:text="Parse"
         android:layout_width="wrap_content"

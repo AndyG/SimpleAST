@@ -19,12 +19,12 @@ public class SimpleRenderer {
     }
 
     public static SpannableStringBuilder render(final CharSequence source, final Collection<Parser.Rule> rules) {
-        final Parser parser = new Parser(source);
+        final Parser parser = new Parser();
         for (final Parser.Rule rule : rules) {
             parser.addRule(rule);
         }
 
-        return render(parser.iterativeParse());
+        return render(parser.parse(source));
     }
 
     public static SpannableStringBuilder render(final Collection<Node> ast) {

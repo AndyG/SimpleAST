@@ -28,13 +28,20 @@ public class MainActivity extends AppCompatActivity {
         resultText = (TextView) findViewById(R.id.result_text);
         input = (EditText) findViewById(R.id.input);
 
-        input.setText("*italics* not italics");
-        input.setText("*italics*");
+        input.setText("**bold _and italics_ and more bold**");
 
         findViewById(R.id.crash_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final List<Node> ast = new Parser(input.getText()).addRules(SimpleMarkdownRules.getSimpleMarkdownRules()).iterativeParse();
+                final List<Node> ast = new Parser().addRules(SimpleMarkdownRules.getSimpleMarkdownRules()).parse(createTestText());
+                resultText.setText(SimpleRenderer.render(ast));
+            }
+        });
+
+        findViewById(R.id.test_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final List<Node> ast = new Parser().addRules(SimpleMarkdownRules.getSimpleMarkdownRules()).parse(input.getText());
                 resultText.setText(SimpleRenderer.render(ast));
             }
         });
