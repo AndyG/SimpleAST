@@ -1,8 +1,5 @@
 package com.agarron.simpleast_core.builder;
 
-
-import android.util.Log;
-
 import com.agarron.simpleast_core.node.Node;
 import com.agarron.simpleast_core.node.Parent;
 
@@ -37,19 +34,13 @@ public class Parser {
     }
 
     public List<Node> parse(final CharSequence source) {
-
         final Stack<NodeBuilder> stack = new Stack<>();
         final Root root = new Root();
-
         stack.add(new NodeBuilder(root, 0, source.length()));
 
         while (!stack.isEmpty()) {
 
-            Log.d("findme", "iterating with stack size: " + stack.size());
-
             final NodeBuilder builder = stack.pop();
-
-            Log.d("findme", "builder: " + builder.startIndex + " -- " + builder.endIndex);
 
             if (builder.startIndex >= builder.endIndex) {
                 break;
@@ -58,44 +49,33 @@ public class Parser {
             final CharSequence inspectionSource = source.subSequence(builder.startIndex, builder.endIndex);
             final int offset = builder.startIndex;
 
-            Log.d("findme", "iterativeParse: inspecting " + inspectionSource);
-
             boolean foundRule = false;
             for (final Rule rule : rules) {
 
                 final Matcher matcher = rule.pattern.matcher(inspectionSource);
 
                 if (matcher.find()) {
-
-                    final int matchStart = matcher.start();
-                    final int matchEnd = matcher.end();
-
-                    final int matcherSourceStart = matchStart + offset;
-                    final int matcherSourceEnd = matchEnd + offset;
-
                     foundRule = true;
 
                     if (builder.node instanceof Parent) {
 
-                        final NodeBuilder newBuilder = rule.parse(matcher, (Parent) builder.node);
+                        final NodeBuilder newBuilder = rule.parse(matcher);
                         newBuilder.applyOffset(offset);
 
                         if (newBuilder.node instanceof Parent) {
                             stack.push(newBuilder);
                         }
 
+                        // We want to speak in terms of indices within the source string,
+                        // but the Rules only see the matchers in the context of the substring
+                        // being examined. Adding this offset address that issue.
+                        final int matcherSourceEnd = matcher.end() + offset;
+
                         if (matcherSourceEnd != builder.endIndex) {
                             stack.push(new NodeBuilder(builder.node, matcherSourceEnd, builder.endIndex));
                         }
 
-                        final int leftoverStart = newBuilder.endIndex;
-                        final int leftoverEnd = builder.endIndex;
-
-                        Log.d("findme", "leftover start: " + leftoverStart);
-                        Log.d("findme", "leftover end: " + leftoverEnd);
-
                         ((Parent) builder.node).addChild(newBuilder.node);
-                        Log.d("findme", "added node of type: " + newBuilder.node.getClass().getSimpleName());
                     }
 
                     break;
@@ -105,8 +85,6 @@ public class Parser {
             if (!foundRule) {
                 throw new RuntimeException("failed to find rule to match source: \"" + inspectionSource + "\"");
             }
-
-            Log.d("findme", "--------------------------");
         }
 
         return root.getChildren();
@@ -137,7 +115,7 @@ public class Parser {
             this.pattern = pattern;
         }
 
-        public abstract NodeBuilder parse(Matcher matcher, Parent parent);
+        public abstract NodeBuilder parse(Matcher matcher);
     }
 
     private static class Root implements Parent {
@@ -147,11 +125,6 @@ public class Parser {
         @Override
         public String getType() {
             return "root";
-        }
-
-        @Override
-        public Parent getParent() {
-            return null;
         }
 
         @Override

@@ -15,14 +15,12 @@ public class StyleNode implements Node, Parent, SpannableRenderable {
 
     public static final String TYPE = "style";
 
-    private final Parent parent;
     private final List<Node> children;
     private final Collection<CharacterStyle> styles;
 
-    public StyleNode(final Collection<CharacterStyle> styles, final Parent parent) {
+    public StyleNode(final Collection<CharacterStyle> styles) {
         this.styles = styles;
         this.children = new ArrayList<>();
-        this.parent = parent;
     }
 
     @Override
@@ -42,11 +40,6 @@ public class StyleNode implements Node, Parent, SpannableRenderable {
     @Override
     public String getType() {
         return TYPE;
-    }
-
-    @Override
-    public Parent getParent() {
-        return parent;
     }
 
     @Override

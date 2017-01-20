@@ -10,11 +10,9 @@ public class TextNode implements Node, SpannableRenderable {
     public static final String TYPE = "text";
 
     private final String content;
-    private final Parent parent;
 
-    public TextNode(final String content, final Parent parent) {
+    public TextNode(final String content) {
         this.content = content;
-        this.parent = parent;
     }
 
     public String getContent() {
@@ -24,11 +22,6 @@ public class TextNode implements Node, SpannableRenderable {
     @Override
     public String getType() {
         return TYPE;
-    }
-
-    @Override
-    public Parent getParent() {
-        return parent;
     }
 
     @Override
