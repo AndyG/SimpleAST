@@ -8,7 +8,6 @@ import android.text.style.CharacterStyle;
 import com.agarron.simpleast_core.simple.SpannableRenderable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class StyleNode implements Node, Parent, SpannableRenderable {
@@ -22,9 +21,9 @@ public class StyleNode implements Node, Parent, SpannableRenderable {
     }
 
     private final List<Node> children;
-    private final Collection<CharacterStyle> styles;
+    private final List<CharacterStyle> styles;
 
-    public StyleNode(final Collection<CharacterStyle> styles) {
+    public StyleNode(final List<CharacterStyle> styles) {
         this.styles = styles;
         this.children = new ArrayList<>();
     }
@@ -39,7 +38,7 @@ public class StyleNode implements Node, Parent, SpannableRenderable {
         children.add(child);
     }
 
-    public Collection<CharacterStyle> getStyles() {
+    public List<CharacterStyle> getStyles() {
         return styles;
     }
 

@@ -11,7 +11,6 @@ import com.agarron.simpleast_core.node.StyleNode;
 import com.agarron.simpleast_core.node.TextNode;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -64,6 +63,7 @@ public class SimpleMarkdownRules {
     public static Parser.Rule RULE_TEXT = new Parser.Rule(PATTERN_TEXT) {
         @Override
         public Parser.SubtreeSpec parse(Matcher matcher) {
+            System.out.print("found text: " + matcher.group());
             return Parser.SubtreeSpec.createTerminal(new TextNode(matcher.group()));
         }
     };
@@ -71,6 +71,7 @@ public class SimpleMarkdownRules {
     public static Parser.Rule RULE_ESCAPE = new Parser.Rule(PATTERN_ESCAPE) {
         @Override
         public Parser.SubtreeSpec parse(Matcher matcher) {
+            System.out.print("found escape");
             return Parser.SubtreeSpec.createTerminal(new TextNode(matcher.group(1)));
         }
     };
@@ -88,7 +89,7 @@ public class SimpleMarkdownRules {
                 endIndex = matcher.end(1);
             }
 
-            final Collection<CharacterStyle> styles = new ArrayList<>(1);
+            final List<CharacterStyle> styles = new ArrayList<>(1);
             styles.add(new StyleSpan(Typeface.ITALIC));
             final StyleNode node = new StyleNode(styles);
 
@@ -111,7 +112,7 @@ public class SimpleMarkdownRules {
         return new Parser.Rule(pattern) {
             @Override
             public Parser.SubtreeSpec parse(Matcher matcher) {
-                StyleNode node = new StyleNode(Collections.singleton(styleFactory.get()));
+                StyleNode node = new StyleNode(Collections.singletonList(styleFactory.get()));
                 return Parser.SubtreeSpec.createNonterminal(node, matcher.start(1), matcher.end(1));
             }
         };

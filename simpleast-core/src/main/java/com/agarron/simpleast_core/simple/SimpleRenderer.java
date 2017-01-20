@@ -3,7 +3,6 @@ package com.agarron.simpleast_core.simple;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.CharacterStyle;
-import android.util.Log;
 
 import com.agarron.simpleast_core.builder.Parser;
 import com.agarron.simpleast_core.node.Node;
@@ -28,13 +27,11 @@ public class SimpleRenderer {
     }
 
     public static SpannableStringBuilder render(final Collection<Node> ast) {
-        Log.d("findme", "got AST of length " + ast.size());
         final SpannableStringBuilder builder = new SpannableStringBuilder();
         for (final Node node : ast) {
             renderNode(node, builder);
         }
 
-        Log.d("findme", "rendered into builder of length " + builder.length());
         return builder;
     }
 
