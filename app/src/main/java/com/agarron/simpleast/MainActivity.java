@@ -15,7 +15,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int NUM_UNDERSCORES = 3;
+    private static final int NUM_UNDERSCORES = 1000;
 
     private TextView resultText;
     private EditText input;
