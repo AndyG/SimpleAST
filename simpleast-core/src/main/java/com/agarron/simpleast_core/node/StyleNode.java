@@ -15,6 +15,12 @@ public class StyleNode implements Node, Parent, SpannableRenderable {
 
     public static final String TYPE = "style";
 
+    public static StyleNode createWithText(final String content, final List<CharacterStyle> styles) {
+        final StyleNode styleNode = new StyleNode(styles);
+        styleNode.addChild(new TextNode(content));
+        return styleNode;
+    }
+
     private final List<Node> children;
     private final Collection<CharacterStyle> styles;
 
