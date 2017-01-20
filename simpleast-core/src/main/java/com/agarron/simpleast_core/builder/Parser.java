@@ -90,6 +90,13 @@ public class Parser {
         return root.getChildren();
     }
 
+    /**
+     * Facilitates fast parsing of the source text.
+     *
+     * The provided Node will be added to the tree, and text between startIndex (inclusive)
+     * and endIndex (exclusive) will continue to be parsed into Nodes and added as children under
+     * this Node.
+     */
     public static class NodeBuilder {
         private final Node node;
         private int startIndex;
