@@ -73,6 +73,7 @@ public class Parser {
             }
 
             final CharSequence inspectionSource = source.subSequence(builder.startIndex, builder.endIndex);
+            Log.d("findme", "iterativeParse: inspecting " + inspectionSource);
 
             boolean foundRule = false;
             for (final Rule rule : rules) {
@@ -83,8 +84,13 @@ public class Parser {
                     foundRule = true;
 
                     if (builder.node instanceof Parent) {
+
                         final NodeBuilder newBuilder = rule.parse(matcher);
-                        stack.add(newBuilder);
+
+                        if (newBuilder.node instanceof Parent) {
+                            stack.push(newBuilder);
+                        }
+
                         ((Parent) builder.node).addChild(newBuilder.node);
                     }
 

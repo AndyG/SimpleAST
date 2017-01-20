@@ -64,14 +64,14 @@ public class SimpleMarkdownRules {
     public static Parser.Rule RULE_TEXT = new Parser.Rule(PATTERN_TEXT) {
         @Override
         public Parser.NodeBuilder parse(Matcher matcher) {
-            return new Parser.NodeBuilder(new TextNode(matcher.group()), 0, 0);
+            return new Parser.NodeBuilder(new TextNode(matcher.group()), matcher.start(), matcher.end());
         }
     };
 
     public static Parser.Rule RULE_ESCAPE = new Parser.Rule(PATTERN_ESCAPE) {
         @Override
         public Parser.NodeBuilder parse(Matcher matcher) {
-            return new Parser.NodeBuilder(new TextNode(matcher.group(1)), 0, 0);
+            return new Parser.NodeBuilder(new TextNode(matcher.group(1)), matcher.start(), matcher.end());
         }
     };
 
