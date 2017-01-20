@@ -57,25 +57,23 @@ public class Parser {
                 if (matcher.find()) {
                     foundRule = true;
 
-                    if (!builder.isTerminal) {
+                    final SubtreeSpec newBuilder = rule.parse(matcher);
+                    ((Parent) builder.root).addChild(newBuilder.root);
 
-                        final SubtreeSpec newBuilder = rule.parse(matcher);
+                    if (!newBuilder.isTerminal) {
+                        newBuilder.applyOffset(offset);
+                        stack.push(newBuilder);
+                    }
 
-                        if (!newBuilder.isTerminal) {
-                            newBuilder.applyOffset(offset);
-                            stack.push(newBuilder);
-                        }
+                    // We want to speak in terms of indices within the source string,
+                    // but the Rules only see the matchers in the context of the substring
+                    // being examined. Adding this offset address that issue.
+                    final int matcherSourceEnd = matcher.end() + offset;
 
-                        // We want to speak in terms of indices within the source string,
-                        // but the Rules only see the matchers in the context of the substring
-                        // being examined. Adding this offset address that issue.
-                        final int matcherSourceEnd = matcher.end() + offset;
-
-                        if (matcherSourceEnd != builder.endIndex) {
-                            stack.push(new SubtreeSpec((Parent) builder.root, matcherSourceEnd, builder.endIndex));
-                        }
-
-                        ((Parent) builder.root).addChild(newBuilder.root);
+                    // In case the last match didn't consume the rest of the source for this subtree,
+                    // make sure the rest of the source is consumed.
+                    if (matcherSourceEnd != builder.endIndex) {
+                        stack.push(SubtreeSpec.createNonterminal((Parent) builder.root, matcherSourceEnd, builder.endIndex));
                     }
 
                     break;
