@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
         resultText = (TextView) findViewById(R.id.result_text);
         input = (EditText) findViewById(R.id.input);
 
-        input.setText(createTestText());
+        input.setText("*italics* not italics");
+        input.setText("*italics*");
 
         findViewById(R.id.crash_btn).setOnClickListener(new View.OnClickListener() {
             @Override

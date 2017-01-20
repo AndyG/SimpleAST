@@ -73,6 +73,8 @@ public class Parser {
             }
 
             final CharSequence inspectionSource = source.subSequence(builder.startIndex, builder.endIndex);
+            final int offset = builder.startIndex;
+
             Log.d("findme", "iterativeParse: inspecting " + inspectionSource);
 
             boolean foundRule = false;
@@ -81,17 +83,36 @@ public class Parser {
                 final Matcher matcher = rule.pattern.matcher(inspectionSource);
 
                 if (matcher.find()) {
+
+                    final int matchStart = matcher.start();
+                    final int matchEnd = matcher.end();
+
+                    final int matcherSourceStart = matchStart + offset;
+                    final int matcherSourceEnd = matchEnd + offset;
+
                     foundRule = true;
 
                     if (builder.node instanceof Parent) {
 
-                        final NodeBuilder newBuilder = rule.parse(matcher);
+                        final NodeBuilder newBuilder = rule.parse(matcher, (Parent) builder.node);
+                        newBuilder.applyOffset(offset);
 
                         if (newBuilder.node instanceof Parent) {
                             stack.push(newBuilder);
                         }
 
+                        if (matcherSourceEnd != builder.endIndex) {
+                            stack.push(new NodeBuilder(builder.node, matcher.end(), builder.endIndex));
+                        }
+
+                        final int leftoverStart = newBuilder.endIndex;
+                        final int leftoverEnd = builder.endIndex;
+
+                        Log.d("findme", "leftover start: " + leftoverStart);
+                        Log.d("findme", "leftover end: " + leftoverEnd);
+
                         ((Parent) builder.node).addChild(newBuilder.node);
+                        Log.d("findme", "added node of type: " + newBuilder.node.getClass().getSimpleName());
                     }
 
                     break;
@@ -101,6 +122,8 @@ public class Parser {
             if (!foundRule) {
                 throw new RuntimeException("failed to find rule to match source: \"" + inspectionSource + "\"");
             }
+
+            Log.d("findme", "--------------------------");
         }
 
         return root.getChildren();
@@ -137,13 +160,18 @@ public class Parser {
 
     public static class NodeBuilder {
         private final Node node;
-        private final int startIndex;
-        private final int endIndex;
+        private int startIndex;
+        private int endIndex;
 
         public NodeBuilder(Node node, int startIndex, int endIndex) {
             this.node = node;
             this.startIndex = startIndex;
             this.endIndex = endIndex;
+        }
+
+        private void applyOffset(final int offset) {
+            startIndex += offset;
+            endIndex += offset;
         }
     }
 
@@ -155,7 +183,7 @@ public class Parser {
             this.pattern = pattern;
         }
 
-        public abstract NodeBuilder parse(Matcher matcher);
+        public abstract NodeBuilder parse(Matcher matcher, Parent parent);
     }
 
     private static class Root implements Parent {
@@ -165,6 +193,11 @@ public class Parser {
         @Override
         public String getType() {
             return "root";
+        }
+
+        @Override
+        public Parent getParent() {
+            return null;
         }
 
         @Override
