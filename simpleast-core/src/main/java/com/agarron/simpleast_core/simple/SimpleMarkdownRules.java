@@ -63,7 +63,6 @@ public class SimpleMarkdownRules {
     public static Parser.Rule RULE_TEXT = new Parser.Rule(PATTERN_TEXT) {
         @Override
         public Parser.SubtreeSpec parse(Matcher matcher) {
-            System.out.print("found text: " + matcher.group());
             return Parser.SubtreeSpec.createTerminal(new TextNode(matcher.group()));
         }
     };
@@ -71,7 +70,6 @@ public class SimpleMarkdownRules {
     public static Parser.Rule RULE_ESCAPE = new Parser.Rule(PATTERN_ESCAPE) {
         @Override
         public Parser.SubtreeSpec parse(Matcher matcher) {
-            System.out.print("found escape");
             return Parser.SubtreeSpec.createTerminal(new TextNode(matcher.group(1)));
         }
     };
