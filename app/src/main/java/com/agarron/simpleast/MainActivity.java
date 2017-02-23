@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.crash_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SimpleRenderer.renderBasicMarkdown(resultText, createTestText());
                 final List<Node> ast = new Parser().addRules(SimpleMarkdownRules.getSimpleMarkdownRules()).parse(createTestText());
                 resultText.setText(SimpleRenderer.render(ast));
             }
@@ -41,8 +42,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.test_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final List<Node> ast = new Parser().addRules(SimpleMarkdownRules.getSimpleMarkdownRules()).parse(input.getText());
-                resultText.setText(SimpleRenderer.render(ast));
+                SimpleRenderer.renderBasicMarkdown(resultText, input.getText());
             }
         });
     }
