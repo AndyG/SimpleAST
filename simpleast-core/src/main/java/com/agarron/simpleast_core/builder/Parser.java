@@ -2,6 +2,7 @@ package com.agarron.simpleast_core.builder;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.agarron.simpleast_core.node.Node;
 import com.agarron.simpleast_core.node.Parent;
@@ -37,6 +38,8 @@ public class Parser {
     }
 
     public List<Node> parse(final @Nullable CharSequence source) {
+        final long startMillis = System.currentTimeMillis();
+        long iterations = 0;
         final Stack<SubtreeSpec> stack = new Stack<>();
         final Root root = new Root();
 
@@ -46,11 +49,17 @@ public class Parser {
 
         while (!stack.isEmpty()) {
 
+            iterations++;
+            final long iterationStartMillis = System.currentTimeMillis();
             final SubtreeSpec builder = stack.pop();
 
             if (builder.startIndex >= builder.endIndex) {
+                Log.e("findme", "breaking");
                 break;
             }
+
+            Log.d("findme", "iteration with startIndex: " + builder.startIndex + ", end index: " + builder.endIndex + " at depth: " + builder.depth);
+            Log.d("findme", "iteration with stack size: " + stack.size());
 
             final CharSequence inspectionSource = source.subSequence(builder.startIndex, builder.endIndex);
             final int offset = builder.startIndex;
@@ -89,7 +98,15 @@ public class Parser {
             if (!foundRule) {
                 throw new RuntimeException("failed to find rule to match source: \"" + inspectionSource + "\"");
             }
+
+            final long iterationEndMillis = System.currentTimeMillis();
+            if ((iterationEndMillis - iterationStartMillis) > 10L) {
+                Log.e("findme", "long iteration: " + inspectionSource + "\n took " + (iterationEndMillis - iterationStartMillis) + " ms");
+            }
         }
+
+        final long endMillis = System.currentTimeMillis();
+        Log.d("findme", "parse took: " + (endMillis - startMillis) + " ms and " + iterations + " iterations");
 
         return root.getChildren();
     }
@@ -109,6 +126,7 @@ public class Parser {
         private final boolean isTerminal;
         private int startIndex;
         private int endIndex;
+        private int depth;
 
         public static SubtreeSpec createNonterminal(Parent node, int startIndex, int endIndex) {
             return new SubtreeSpec(node, startIndex, endIndex);
@@ -123,6 +141,7 @@ public class Parser {
             this.isTerminal = false;
             this.startIndex = startIndex;
             this.endIndex = endIndex;
+            this.depth = depth;
         }
 
         private SubtreeSpec(Node root) {

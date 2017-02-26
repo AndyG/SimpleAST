@@ -1,0 +1,10 @@
+  File "/usr/local/lib/python3.5/dist-packages/youtube_dl/YoutubeDL.py", line 2000, in urlopen
+    req = sanitized_Request(req)
+  File "/usr/local/lib/python3.5/dist-packages/youtube_dl/utils.py", line 518, in sanitized_Request
+    return compat_urllib_request.Request(sanitize_url(url), *args, **kwargs)
+  File "/usr/lib/python3.5/urllib/request.py", line 269, in init
+    self.full_url = url
+  File "/usr/lib/python3.5/urllib/request.py", line 295, in full_url
+    self._parse()
+  File "/usr/lib/python3.5/urllib/request.py", line 324, in _parse
+    raise ValueError("unknown url type: %r" % self.full_url)

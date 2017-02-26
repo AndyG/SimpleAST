@@ -6,18 +6,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.agarron.simpleast_core.builder.Parser;
-import com.agarron.simpleast_core.node.Node;
-import com.agarron.simpleast_core.simple.SimpleMarkdownRules;
 import com.agarron.simpleast_core.simple.SimpleRenderer;
 
-import java.util.List;
+import java.io.InputStream;
+import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int NUM_UNDERSCORES = 4000;
 
-    private TextView resultText;
+    private TextView resultTextView;
     private EditText input;
 
     @Override
@@ -25,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        resultText = (TextView) findViewById(R.id.result_text);
+        resultTextView = (TextView) findViewById(R.id.result_text);
         input = (EditText) findViewById(R.id.input);
 
         input.setText("**bold _and italics_ and more bold**");
@@ -33,16 +31,15 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.crash_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SimpleRenderer.renderBasicMarkdown(resultText, createTestText());
-                final List<Node> ast = new Parser().addRules(SimpleMarkdownRules.getSimpleMarkdownRules()).parse(createTestText());
-                resultText.setText(SimpleRenderer.render(ast));
+                final String testText = loadTestText();
+                SimpleRenderer.renderBasicMarkdown(resultTextView, testText);
             }
         });
 
         findViewById(R.id.test_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SimpleRenderer.renderBasicMarkdown(resultText, input.getText());
+                SimpleRenderer.renderBasicMarkdown(resultTextView, input.getText());
             }
         });
     }
@@ -60,5 +57,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return builder.toString();
+    }
+
+    private String loadTestText() {
+        final InputStream inputStream = getResources().openRawResource(R.raw.test_text);
+        return convertStreamToString(inputStream);
+    }
+
+    static String convertStreamToString(final InputStream inputStream) {
+        final Scanner s = new Scanner(inputStream).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
     }
 }
