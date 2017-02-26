@@ -1,8 +1,6 @@
 package com.agarron.simpleast_core.builder;
 
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
-import android.util.Log;
 
 import com.agarron.simpleast_core.node.Node;
 import com.agarron.simpleast_core.node.Parent;
