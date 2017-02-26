@@ -1,7 +1,6 @@
 package com.agarron.simpleast_core.builder;
 
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.agarron.simpleast_core.node.Node;
 import com.agarron.simpleast_core.node.Parent;
@@ -40,12 +39,11 @@ public class Parser {
         final Stack<SubtreeSpec> stack = new Stack<>();
         final Root root = new Root();
 
-        if (!TextUtils.isEmpty(source)) {
+        if (!isTextEmpty(source)) {
             stack.add(new SubtreeSpec(root, 0, source.length()));
         }
 
         while (!stack.isEmpty()) {
-
             final SubtreeSpec builder = stack.pop();
 
             if (builder.startIndex >= builder.endIndex) {
@@ -92,6 +90,10 @@ public class Parser {
         }
 
         return root.getChildren();
+    }
+
+    private static boolean isTextEmpty(final CharSequence text) {
+        return text == null || text.length() == 0;
     }
 
     /**

@@ -34,7 +34,7 @@ public class SimpleMarkdownRules {
         // italics
         //  - whitespace
         //  - non-whitespace, non-* characters
-        "(?:\\*\\*|\\s+|[^\\s\\*])*?" +
+        "(?:\\*\\*|\\s+(?:[^\\*\\s]|\\*\\*)|[^\\s\\*])+?" +
         // followed by a non-space, non-* then *
         "[^\\s\\*])\\*(?!\\*)"
     );
