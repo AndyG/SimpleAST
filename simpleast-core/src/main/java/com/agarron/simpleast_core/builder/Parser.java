@@ -12,35 +12,35 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Parser {
+public class Parser<T extends Node> {
 
-    private final List<Rule> rules = new ArrayList<>();
+    private final List<Rule<T>> rules = new ArrayList<>();
 
-    public Parser addRule(final Rule rule) {
+    public Parser<T> addRule(final Rule<T> rule) {
         rules.add(rule);
         return this;
     }
 
-    public Parser addRules(final Collection<Rule> rules) {
-        for (final Rule rule : rules) {
+    public Parser<T> addRules(final Collection<Rule<T>> rules) {
+        for (final Rule<T> rule : rules) {
             addRule(rule);
         }
         return this;
     }
 
-    public Parser addRules(final Rule... rules) {
-        for (final Rule rule : rules) {
+    public Parser<T> addRules(final Rule<T>... rules) {
+        for (final Rule<T> rule : rules) {
             addRule(rule);
         }
         return this;
     }
 
-    public List<Node> parse(final @Nullable CharSequence source) {
+    public List<T> parse(final @Nullable CharSequence source) {
         final Stack<SubtreeSpec> stack = new Stack<>();
-        final Root root = new Root();
+        final Root<T> root = new Root<>();
 
         if (!isTextEmpty(source)) {
-            stack.add(new SubtreeSpec(root, 0, source.length()));
+            stack.add(new SubtreeSpec<>(root, 0, source.length()));
         }
 
         while (!stack.isEmpty()) {
@@ -54,15 +54,16 @@ public class Parser {
             final int offset = builder.startIndex;
 
             boolean foundRule = false;
-            for (final Rule rule : rules) {
+            for (final Rule<T> rule : rules) {
 
                 final Matcher matcher = rule.pattern.matcher(inspectionSource);
 
                 if (matcher.find()) {
                     foundRule = true;
 
-                    final SubtreeSpec newBuilder = rule.parse(matcher);
-                    ((Parent) builder.root).addChild(newBuilder.root);
+                    final SubtreeSpec<T> newBuilder = rule.parse(matcher);
+                    final Parent<T> parent = (Parent<T>) builder.root;
+                    parent.addChild(newBuilder.root);
 
                     if (!newBuilder.isTerminal) {
                         newBuilder.applyOffset(offset);
@@ -77,7 +78,7 @@ public class Parser {
                     // In case the last match didn't consume the rest of the source for this subtree,
                     // make sure the rest of the source is consumed.
                     if (matcherSourceEnd != builder.endIndex) {
-                        stack.push(SubtreeSpec.createNonterminal((Parent) builder.root, matcherSourceEnd, builder.endIndex));
+                        stack.push(SubtreeSpec.createNonterminal(parent, matcherSourceEnd, builder.endIndex));
                     }
 
                     break;
@@ -106,28 +107,28 @@ public class Parser {
      * For terminal subtrees, the root will simply be added to the tree and no additional parsing will
      * take place on the text.
      */
-    public static class SubtreeSpec {
-        private final Node root;
+    public static class SubtreeSpec<T extends Node> {
+        private final T root;
         private final boolean isTerminal;
         private int startIndex;
         private int endIndex;
 
-        public static SubtreeSpec createNonterminal(Parent node, int startIndex, int endIndex) {
-            return new SubtreeSpec(node, startIndex, endIndex);
+        public static <T extends Node> SubtreeSpec<T> createNonterminal(T node, int startIndex, int endIndex) {
+            return new SubtreeSpec<>(node, startIndex, endIndex);
         }
 
-        public static SubtreeSpec createTerminal(Node node) {
-            return new SubtreeSpec(node);
+        public static <T extends Node> SubtreeSpec<T> createTerminal(T node) {
+            return new SubtreeSpec<>(node);
         }
 
-        private SubtreeSpec(Parent root, int startIndex, int endIndex) {
+        private SubtreeSpec(T root, int startIndex, int endIndex) {
             this.root = root;
             this.isTerminal = false;
             this.startIndex = startIndex;
             this.endIndex = endIndex;
         }
 
-        private SubtreeSpec(Node root) {
+        private SubtreeSpec(T root) {
             this.root = root;
             this.isTerminal = true;
         }
@@ -138,7 +139,7 @@ public class Parser {
         }
     }
 
-    public static abstract class Rule {
+    public static abstract class Rule<T extends Node> {
 
         private final Pattern pattern;
 
@@ -146,12 +147,12 @@ public class Parser {
             this.pattern = pattern;
         }
 
-        public abstract SubtreeSpec parse(Matcher matcher);
+        public abstract SubtreeSpec<T> parse(Matcher matcher);
     }
 
-    private static class Root implements Parent {
+    private static class Root<T extends Node> implements Parent<T> {
 
-        private final List<Node> children = new ArrayList<>();
+        private final List<T> children = new ArrayList<>();
 
         @Override
         public String getType() {
@@ -159,12 +160,12 @@ public class Parser {
         }
 
         @Override
-        public List<Node> getChildren() {
+        public List<T> getChildren() {
             return children;
         }
 
         @Override
-        public void addChild(Node child) {
+        public void addChild(T child) {
             children.add(child);
         }
     }

@@ -2,7 +2,7 @@ package com.agarron.simpleast_core.node;
 
 import java.util.List;
 
-public interface Parent extends Node {
-    List<Node> getChildren();
-    void addChild(Node child);
+public interface Parent<T extends Node> extends Node {
+    List<T> getChildren();
+    void addChild(T child);
 }

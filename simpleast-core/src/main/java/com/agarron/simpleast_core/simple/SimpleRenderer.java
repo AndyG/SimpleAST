@@ -28,16 +28,16 @@ public class SimpleRenderer {
         return render(source, SimpleMarkdownRules.getSimpleMarkdownRules());
     }
 
-    public static SpannableStringBuilder render(final CharSequence source, final Collection<Parser.Rule> rules) {
-        final Parser parser = new Parser();
-        for (final Parser.Rule rule : rules) {
+    public static <T extends Node> SpannableStringBuilder render(final CharSequence source, final Collection<Parser.Rule<T>> rules) {
+        final Parser<T> parser = new Parser<>();
+        for (final Parser.Rule<T> rule : rules) {
             parser.addRule(rule);
         }
 
         return render(parser.parse(source));
     }
 
-    public static SpannableStringBuilder render(final Collection<Node> ast) {
+    public static <T extends Node> SpannableStringBuilder render(final Collection<T> ast) {
         final SpannableStringBuilder builder = new SpannableStringBuilder();
         for (final Node node : ast) {
             renderNode(node, builder);
