@@ -64,7 +64,7 @@ public class SimpleMarkdownRules {
 
     public static Parser.Rule<Node> RULE_TEXT = new Parser.Rule<Node>(PATTERN_TEXT) {
         @Override
-        public Parser.SubtreeSpec<Node> parse(Matcher matcher) {
+        public Parser.SubtreeSpec<Node> parse(Matcher matcher, Parser parser, boolean isNested) {
             final Node node = new TextNode(matcher.group());
             return Parser.SubtreeSpec.createTerminal(node);
         }
@@ -72,14 +72,14 @@ public class SimpleMarkdownRules {
 
     public static Parser.Rule<Node> RULE_ESCAPE = new Parser.Rule<Node>(PATTERN_ESCAPE) {
         @Override
-        public Parser.SubtreeSpec<Node> parse(Matcher matcher) {
+        public Parser.SubtreeSpec<Node> parse(Matcher matcher, Parser parser, boolean isNested) {
             return Parser.SubtreeSpec.createTerminal((Node) new TextNode(matcher.group(1)));
         }
     };
 
     public static Parser.Rule<Node> RULE_ITALICS = new Parser.Rule<Node>(PATTERN_ITALICS) {
         @Override
-        public Parser.SubtreeSpec<Node> parse(final Matcher matcher) {
+        public Parser.SubtreeSpec<Node> parse(final Matcher matcher, Parser parser, boolean isNested) {
             final int startIndex, endIndex;
             final String asteriskMatch = matcher.group(2);
             if (asteriskMatch != null && asteriskMatch.length() > 0) {
@@ -99,20 +99,26 @@ public class SimpleMarkdownRules {
     };
 
     public static List<Parser.Rule<Node>> getSimpleMarkdownRules() {
+        return getSimpleMarkdownRules(true);
+    }
+
+    public static List<Parser.Rule<Node>> getSimpleMarkdownRules(final boolean includeTextRule) {
         final List<Parser.Rule<Node>> rules = new ArrayList<>();
         rules.add(RULE_ESCAPE);
         rules.add(RULE_BOLD);
         rules.add(RULE_UNDERLINE);
         rules.add(RULE_ITALICS);
         rules.add(RULE_STRIKETHRU);
-        rules.add(RULE_TEXT);
+        if (includeTextRule) {
+            rules.add(RULE_TEXT);
+        }
         return rules;
     }
 
     private static Parser.Rule<Node> createSimpleStyleRule(final Pattern pattern, final StyleFactory styleFactory) {
         return new Parser.Rule<Node>(pattern) {
             @Override
-            public Parser.SubtreeSpec<Node> parse(Matcher matcher) {
+            public Parser.SubtreeSpec<Node> parse(Matcher matcher, Parser parser, boolean isNested) {
                 final Node node = new StyleNode(Collections.singletonList(styleFactory.get()));
                 return Parser.SubtreeSpec.createNonterminal(node, matcher.start(1), matcher.end(1));
             }

@@ -2,16 +2,21 @@ package com.agarron.simpleast;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.style.CharacterStyle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.agarron.simpleast_core.builder.Parser;
 import com.agarron.simpleast_core.node.Node;
+import com.agarron.simpleast_core.node.StyleNode;
+import com.agarron.simpleast_core.node.TextNode;
 import com.agarron.simpleast_core.simple.SimpleMarkdownRules;
 import com.agarron.simpleast_core.simple.SimpleRenderer;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,8 +36,9 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.crash_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final List<Parser.Rule<Node>> rules = getRules();
                 final List<Node> ast = new Parser<>()
-                    .addRules(SimpleMarkdownRules.getSimpleMarkdownRules())
+                    .addRules(rules)
                     .parse(createTestText());
 
                 resultText.setText(SimpleRenderer.render(ast));
@@ -45,6 +51,32 @@ public class MainActivity extends AppCompatActivity {
                 SimpleRenderer.renderBasicMarkdown(resultText, input.getText());
             }
         });
+    }
+
+    private List<Parser.Rule<Node>> getRules() {
+        final List<Parser.Rule<Node>> rules = SimpleMarkdownRules.getSimpleMarkdownRules(false);
+
+        final Parser.Rule<Node> replacementTextRule = new Parser.Rule<Node>(SimpleMarkdownRules.PATTERN_TEXT) {
+            @Override
+            public Parser.SubtreeSpec<Node> parse(Matcher matcher, Parser<Node> parser, boolean isNested) {
+                if (isNested) {
+                    return Parser.SubtreeSpec.createTerminal((Node) new TextNode(matcher.group()));
+                } else {
+                    final String target = matcher.group().replace("youtube", "YOUTUBEWASHERE");
+                    final List<Node> innerNodes = parser.parse(target, true);
+                    final StyleNode parentNode = new StyleNode(Collections.<CharacterStyle>emptyList());
+                    for (final Node child : innerNodes) {
+                        parentNode.addChild(child);
+                    }
+
+                    return Parser.SubtreeSpec.createTerminal((Node) parentNode);
+                }
+            }
+        };
+
+        rules.add(replacementTextRule);
+
+        return rules;
     }
 
     private String createTestText() {

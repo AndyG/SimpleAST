@@ -2,14 +2,10 @@ package com.agarron.simpleast_core.simple;
 
 import android.support.annotation.StringRes;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.CharacterStyle;
 import android.widget.TextView;
 
 import com.agarron.simpleast_core.builder.Parser;
 import com.agarron.simpleast_core.node.Node;
-import com.agarron.simpleast_core.node.StyleNode;
-import com.agarron.simpleast_core.node.TextNode;
 
 import java.util.Collection;
 
@@ -34,7 +30,7 @@ public class SimpleRenderer {
             parser.addRule(rule);
         }
 
-        return render(parser.parse(source));
+        return render(parser.parse(source, false));
     }
 
     public static <T extends Node> SpannableStringBuilder render(final Collection<T> ast) {
@@ -47,19 +43,8 @@ public class SimpleRenderer {
     }
 
     private static void renderNode(final Node node, final SpannableStringBuilder builder) {
-        if (node instanceof StyleNode) {
-            final int startIndex = builder.length();
-            final StyleNode styleNode = (StyleNode) node;
-
-            for (final Node child : styleNode.getChildren()) {
-                renderNode(child, builder);
-            }
-
-            for (final CharacterStyle style : styleNode.getStyles()) {
-                builder.setSpan(style, startIndex, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-        } else if (node instanceof TextNode) {
-            builder.append(((TextNode)node).getContent());
+        if (node instanceof SpannableRenderable) {
+            ((SpannableRenderable) node).render(builder, null);
         } else {
             throw new IllegalArgumentException("invalid node of type: " + node.getType());
         }

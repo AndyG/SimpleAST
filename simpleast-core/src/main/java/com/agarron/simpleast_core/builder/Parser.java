@@ -36,6 +36,10 @@ public class Parser<T extends Node> {
     }
 
     public List<T> parse(final @Nullable CharSequence source) {
+        return parse(source, false);
+    }
+
+    public List<T> parse(final @Nullable CharSequence source, boolean isNested) {
         final Stack<SubtreeSpec> stack = new Stack<>();
         final Root<T> root = new Root<>();
 
@@ -61,7 +65,7 @@ public class Parser<T extends Node> {
                 if (matcher.find()) {
                     foundRule = true;
 
-                    final SubtreeSpec<T> newBuilder = rule.parse(matcher);
+                    final SubtreeSpec<T> newBuilder = rule.parse(matcher, this, isNested);
                     final Parent<T> parent = (Parent<T>) builder.root;
                     parent.addChild(newBuilder.root);
 
@@ -147,7 +151,7 @@ public class Parser<T extends Node> {
             this.pattern = pattern;
         }
 
-        public abstract SubtreeSpec<T> parse(Matcher matcher);
+        public abstract SubtreeSpec<T> parse(Matcher matcher, Parser<T> parser, boolean isNested);
     }
 
     private static class Root<T extends Node> implements Parent<T> {
