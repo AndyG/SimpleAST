@@ -36,9 +36,9 @@ public class SimpleMarkdownRules {
         // italics
         //  - whitespace
         //  - non-whitespace, non-* characters
-        "(?:\\*\\*|\\s+(?:[^\\*\\s]|\\*\\*)|[^\\s\\*])+?" +
+        "(?:\\*\\*|\\s+(?:[^*\\s]|\\*\\*)|[^\\s*])+?" +
         // followed by a non-space, non-* then *
-        "[^\\s\\*])\\*(?!\\*)"
+        ")\\*(?!\\*)"
     );
 
     public static Parser.Rule<Node> RULE_BOLD = createSimpleStyleRule(PATTERN_BOLD, new StyleFactory() {
