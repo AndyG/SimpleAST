@@ -62,7 +62,7 @@ public class SimpleMarkdownRules {
         }
     });
 
-    public static Parser.Rule<Node> RULE_TEXT = new Parser.Rule<Node>(PATTERN_TEXT) {
+    public static Parser.Rule<Node> RULE_TEXT = new Parser.Rule<Node>(PATTERN_TEXT, true) {
         @Override
         public Parser.SubtreeSpec<Node> parse(Matcher matcher, Parser parser, boolean isNested) {
             final Node node = new TextNode(matcher.group());
@@ -70,14 +70,14 @@ public class SimpleMarkdownRules {
         }
     };
 
-    public static Parser.Rule<Node> RULE_ESCAPE = new Parser.Rule<Node>(PATTERN_ESCAPE) {
+    public static Parser.Rule<Node> RULE_ESCAPE = new Parser.Rule<Node>(PATTERN_ESCAPE, false) {
         @Override
         public Parser.SubtreeSpec<Node> parse(Matcher matcher, Parser parser, boolean isNested) {
             return Parser.SubtreeSpec.createTerminal((Node) new TextNode(matcher.group(1)));
         }
     };
 
-    public static Parser.Rule<Node> RULE_ITALICS = new Parser.Rule<Node>(PATTERN_ITALICS) {
+    public static Parser.Rule<Node> RULE_ITALICS = new Parser.Rule<Node>(PATTERN_ITALICS, false) {
         @Override
         public Parser.SubtreeSpec<Node> parse(final Matcher matcher, Parser parser, boolean isNested) {
             final int startIndex, endIndex;
@@ -116,7 +116,7 @@ public class SimpleMarkdownRules {
     }
 
     private static Parser.Rule<Node> createSimpleStyleRule(final Pattern pattern, final StyleFactory styleFactory) {
-        return new Parser.Rule<Node>(pattern) {
+        return new Parser.Rule<Node>(pattern, false) {
             @Override
             public Parser.SubtreeSpec<Node> parse(Matcher matcher, Parser parser, boolean isNested) {
                 final Node node = new StyleNode(Collections.singletonList(styleFactory.get()));

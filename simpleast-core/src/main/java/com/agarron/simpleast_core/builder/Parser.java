@@ -59,6 +59,9 @@ public class Parser<T extends Node> {
 
             boolean foundRule = false;
             for (final Rule<T> rule : rules) {
+                if (isNested && !rule.applyOnNestedParse) {
+                    continue;
+                }
 
                 final Matcher matcher = rule.pattern.matcher(inspectionSource);
 
@@ -146,9 +149,11 @@ public class Parser<T extends Node> {
     public static abstract class Rule<T extends Node> {
 
         private final Pattern pattern;
+        private final boolean applyOnNestedParse;
 
-        public Rule(final Pattern pattern) {
+        public Rule(final Pattern pattern, final boolean applyOnNestedParse) {
             this.pattern = pattern;
+            this.applyOnNestedParse = applyOnNestedParse;
         }
 
         public abstract SubtreeSpec<T> parse(Matcher matcher, Parser<T> parser, boolean isNested);
