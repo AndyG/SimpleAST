@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/angarron/SimpleAST'
     gitUrl = 'https://github.com/angarron/SimpleAST.git'
 
-    libraryVersion = '0.4.2'
+    libraryVersion = '0.5.2'
 
     developerId = 'angarron'
     developerName = 'Anderson Garron'
@@ -26,13 +26,12 @@ ext {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
 
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 28
-        versionName "0.4.2"
+        versionName "0.5.2"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 

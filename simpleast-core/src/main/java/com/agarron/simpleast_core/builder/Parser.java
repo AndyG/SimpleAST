@@ -63,9 +63,10 @@ public class Parser<T extends Node> {
                     continue;
                 }
 
-                final Matcher matcher = rule.pattern.matcher(inspectionSource);
+                final Matcher matcher = rule.matcher.reset(inspectionSource);
 
                 if (matcher.find()) {
+                    final int matcherSourceEnd = matcher.end() + offset;
                     foundRule = true;
 
                     final SubtreeSpec<T> newBuilder = rule.parse(matcher, this, isNested);
@@ -80,7 +81,6 @@ public class Parser<T extends Node> {
                     // We want to speak in terms of indices within the source string,
                     // but the Rules only see the matchers in the context of the substring
                     // being examined. Adding this offset address that issue.
-                    final int matcherSourceEnd = matcher.end() + offset;
 
                     // In case the last match didn't consume the rest of the source for this subtree,
                     // make sure the rest of the source is consumed.
@@ -148,12 +148,16 @@ public class Parser<T extends Node> {
 
     public static abstract class Rule<T extends Node> {
 
-        private final Pattern pattern;
+        private final Matcher matcher;
         private final boolean applyOnNestedParse;
 
         public Rule(final Pattern pattern, final boolean applyOnNestedParse) {
-            this.pattern = pattern;
+            this.matcher = pattern.matcher("");
             this.applyOnNestedParse = applyOnNestedParse;
+        }
+
+        public Rule(final Pattern pattern) {
+          this(pattern, false);
         }
 
         public abstract SubtreeSpec<T> parse(Matcher matcher, Parser<T> parser, boolean isNested);
