@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         input.setText("*t*");
 
-        findViewById(R.id.crash_btn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.benchmark_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final double times = 10.0;

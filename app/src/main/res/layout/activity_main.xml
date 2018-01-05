@@ -29,8 +29,8 @@
         android:layout_height="wrap_content"/>
 
     <Button
-        android:id="@+id/crash_btn"
-        android:text="Parse Test Text"
+        android:id="@+id/benchmark_btn"
+        android:text="Benchmark Test Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
