@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.benchmark_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final double times = 10.0;
+                final double times = 50.0;
                 long totalDuration = 0L;
                 for (int i = 0; i < times; i++) {
                     final long start = System.currentTimeMillis();
