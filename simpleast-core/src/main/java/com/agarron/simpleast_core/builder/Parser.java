@@ -38,18 +38,6 @@ public class Parser<T extends Node> {
     public List<T> parse(final @Nullable CharSequence source) {
         return parse(source, false);
     }
-//
-//    private Matcher getOrCreateMatcher(final Rule rule, final CharSequence text) {
-//      if (ruleMatchers.containsKey(rule)) {
-//          final Matcher cachedMatcher = ruleMatchers.get(rule);
-//          cachedMatcher.reset(text);
-//          return cachedMatcher;
-//      } else {
-//          final Matcher matcher = rule.pattern.matcher(text);
-//          ruleMatchers.put(rule, matcher);
-//          return matcher;
-//      }
-//    }
 
     public List<T> parse(final @Nullable CharSequence source, boolean isNested) {
         final Stack<SubtreeSpec> stack = new Stack<>();
@@ -75,8 +63,7 @@ public class Parser<T extends Node> {
                     continue;
                 }
 
-                final Matcher matcher = rule.matcher;
-                matcher.reset(inspectionSource);
+                final Matcher matcher = rule.matcher.reset(inspectionSource);
 
                 if (matcher.find()) {
                     foundRule = true;
