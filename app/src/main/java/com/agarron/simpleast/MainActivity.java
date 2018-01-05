@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final double times = 10.0;
-                final String text = createTestText();
                 long totalDuration = 0L;
                 for (int i = 0; i < times; i++) {
                     final long start = System.currentTimeMillis();
@@ -46,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
                     final long end = System.currentTimeMillis();
                     final long duration = end - start;
                     totalDuration += duration;
-                    Log.d("findme", "duration of parse: " + duration + " ms");
+                    Log.d("timer", "duration of parse: " + duration + " ms");
                 }
-                Log.d("findme", "average parse time: " + totalDuration / times + " ms");
+                Log.d("timer", "average parse time: " + totalDuration / times + " ms");
             }
         });
 
