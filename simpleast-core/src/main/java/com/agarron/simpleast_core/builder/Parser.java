@@ -63,7 +63,7 @@ public class Parser<T extends Node> {
                     continue;
                 }
 
-                final Matcher matcher = rule.matcher.reset(inspectionSource);
+                final Matcher matcher = rule.pattern.matcher(inspectionSource);
 
                 if (matcher.find()) {
                     foundRule = true;
@@ -148,11 +148,11 @@ public class Parser<T extends Node> {
 
     public static abstract class Rule<T extends Node> {
 
-        private final Matcher matcher;
+        private final Pattern pattern;
         private final boolean applyOnNestedParse;
 
         public Rule(final Pattern pattern, final boolean applyOnNestedParse) {
-            this.matcher = pattern.matcher("");
+            this.pattern = pattern;
             this.applyOnNestedParse = applyOnNestedParse;
         }
 
