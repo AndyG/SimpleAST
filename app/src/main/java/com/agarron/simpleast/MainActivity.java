@@ -3,6 +3,7 @@ package com.agarron.simpleast;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.style.CharacterStyle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -36,12 +37,18 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.crash_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final List<Parser.Rule<Node>> rules = getRules();
-                final List<Node> ast = new Parser<>()
-                    .addRules(rules)
-                    .parse(createTestText());
-
-                resultText.setText(SimpleRenderer.render(ast));
+                final double times = 10.0;
+                final String text = createTestText();
+                long totalDuration = 0L;
+                for (int i = 0; i < times; i++) {
+                    final long start = System.currentTimeMillis();
+                    testParse(50);
+                    final long end = System.currentTimeMillis();
+                    final long duration = end - start;
+                    totalDuration += duration;
+                    Log.d("findme", "duration of parse: " + duration + " ms");
+                }
+                Log.d("findme", "average parse time: " + totalDuration / times + " ms");
             }
         });
 
@@ -103,5 +110,13 @@ public class MainActivity extends AppCompatActivity {
             "    raise ValueError(\"unknown url type: %r\" % self.full_url)\n" +
             "ValueError: unknown url type: '/yts/jsbin/player-en_US-vflkk7pUE/base.js'\n" +
             " (caused by ValueError(\"unknown url type: '/yts/jsbin/player-en_US-vflkk7pUE/base.js'\",))";
+    }
+
+    private void testParse(final int times) {
+        final String text = createTestText();
+
+        for (int i = 0; i < times; i++) {
+            SimpleRenderer.renderBasicMarkdown(resultText, text);
+        }
     }
 }
