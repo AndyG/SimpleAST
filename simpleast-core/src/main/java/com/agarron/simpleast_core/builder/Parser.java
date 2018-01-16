@@ -119,13 +119,13 @@ public class Parser<T extends Node> {
 
     private void logMatch(final Rule<T> rule, final CharSequence source) {
         if (enableDebugging) {
-            Log.d(TAG, "MATCH: with rule with pattern: " + rule.matcher.pattern().toString() + " to source: " + source);
+            Log.i(TAG, "MATCH: with rule with pattern: " + rule.matcher.pattern().toString() + " to source: " + source);
         }
     }
 
     private void logMiss(final Rule<T> rule, final CharSequence source) {
         if (enableDebugging) {
-            Log.d(TAG, "MISS: with rule with pattern: " + rule.matcher.pattern().toString() + " to source: " + source);
+            Log.i(TAG, "MISS: with rule with pattern: " + rule.matcher.pattern().toString() + " to source: " + source);
         }
     }
 
