@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private List<Parser.Rule<Node>> getRules() {
-        final List<Parser.Rule<Node>> rules = SimpleMarkdownRules.getSimpleMarkdownRules(false);
+        final List<Parser.Rule<Node>> rules = SimpleMarkdownRules.createSimpleMarkdownRules(false);
 
         final Parser.Rule<Node> replacementTextRule = new Parser.Rule<Node>(SimpleMarkdownRules.PATTERN_TEXT, true) {
             @Override

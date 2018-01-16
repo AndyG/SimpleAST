@@ -41,76 +41,88 @@ public class SimpleMarkdownRules {
         ")\\*(?!\\*)"
     );
 
-    public static Parser.Rule<Node> RULE_BOLD = createSimpleStyleRule(PATTERN_BOLD, new StyleFactory() {
-        @Override
-        public CharacterStyle get() {
-            return new StyleSpan(Typeface.BOLD);
-        }
-    });
-
-    public static Parser.Rule<Node> RULE_UNDERLINE = createSimpleStyleRule(PATTERN_UNDERLINE, new StyleFactory() {
-        @Override
-        public CharacterStyle get() {
-            return new UnderlineSpan();
-        }
-    });
-
-    public static Parser.Rule<Node> RULE_STRIKETHRU = createSimpleStyleRule(PATTERN_STRIKETHRU, new StyleFactory() {
-        @Override
-        public CharacterStyle get() {
-            return new StrikethroughSpan();
-        }
-    });
-
-    public static Parser.Rule<Node> RULE_TEXT = new Parser.Rule<Node>(PATTERN_TEXT, true) {
-        @Override
-        public Parser.SubtreeSpec<Node> parse(Matcher matcher, Parser parser, boolean isNested) {
-            final Node node = new TextNode(matcher.group());
-            return Parser.SubtreeSpec.createTerminal(node);
-        }
-    };
-
-    public static Parser.Rule<Node> RULE_ESCAPE = new Parser.Rule<Node>(PATTERN_ESCAPE, false) {
-        @Override
-        public Parser.SubtreeSpec<Node> parse(Matcher matcher, Parser parser, boolean isNested) {
-            return Parser.SubtreeSpec.createTerminal((Node) new TextNode(matcher.group(1)));
-        }
-    };
-
-    public static Parser.Rule<Node> RULE_ITALICS = new Parser.Rule<Node>(PATTERN_ITALICS, false) {
-        @Override
-        public Parser.SubtreeSpec<Node> parse(final Matcher matcher, Parser parser, boolean isNested) {
-            final int startIndex, endIndex;
-            final String asteriskMatch = matcher.group(2);
-            if (asteriskMatch != null && asteriskMatch.length() > 0) {
-                startIndex = matcher.start(2);
-                endIndex = matcher.end(2);
-            } else {
-                startIndex = matcher.start(1);
-                endIndex = matcher.end(1);
+    public static Parser.Rule<Node> createBoldRule() {
+        return createSimpleStyleRule(PATTERN_BOLD, new StyleFactory() {
+            @Override
+            public CharacterStyle get() {
+                return new StyleSpan(Typeface.BOLD);
             }
-
-            final List<CharacterStyle> styles = new ArrayList<>(1);
-            styles.add(new StyleSpan(Typeface.ITALIC));
-            final Node node = new StyleNode(styles);
-
-            return Parser.SubtreeSpec.createNonterminal(node, startIndex, endIndex);
-        }
-    };
-
-    public static List<Parser.Rule<Node>> getSimpleMarkdownRules() {
-        return getSimpleMarkdownRules(true);
+        });
     }
 
-    public static List<Parser.Rule<Node>> getSimpleMarkdownRules(final boolean includeTextRule) {
+    public static Parser.Rule<Node> createUnderlineRule() {
+        return createSimpleStyleRule(PATTERN_UNDERLINE, new StyleFactory() {
+            @Override
+            public CharacterStyle get() {
+                return new UnderlineSpan();
+            }
+        });
+    }
+
+    public static Parser.Rule<Node> createStrikethruRule() {
+        return createSimpleStyleRule(PATTERN_STRIKETHRU, new StyleFactory() {
+            @Override
+            public CharacterStyle get() {
+                return new StrikethroughSpan();
+            }
+        });
+    }
+
+    public static Parser.Rule<Node> createTextRule() {
+        return new Parser.Rule<Node>(PATTERN_TEXT, true) {
+            @Override
+            public Parser.SubtreeSpec<Node> parse(Matcher matcher, Parser parser, boolean isNested) {
+                final Node node = new TextNode(matcher.group());
+                return Parser.SubtreeSpec.createTerminal(node);
+            }
+        };
+    }
+
+    public static Parser.Rule<Node> createEscapeRule() {
+       return new Parser.Rule<Node>(PATTERN_ESCAPE, false) {
+            @Override
+            public Parser.SubtreeSpec<Node> parse(Matcher matcher, Parser parser, boolean isNested) {
+                return Parser.SubtreeSpec.createTerminal((Node) new TextNode(matcher.group(1)));
+            }
+        };
+    }
+
+    public static Parser.Rule<Node> createItalicsRule() {
+        return new Parser.Rule<Node>(PATTERN_ITALICS, false) {
+            @Override
+            public Parser.SubtreeSpec<Node> parse(final Matcher matcher, Parser parser, boolean isNested) {
+                final int startIndex, endIndex;
+                final String asteriskMatch = matcher.group(2);
+                if (asteriskMatch != null && asteriskMatch.length() > 0) {
+                    startIndex = matcher.start(2);
+                    endIndex = matcher.end(2);
+                } else {
+                    startIndex = matcher.start(1);
+                    endIndex = matcher.end(1);
+                }
+
+                final List<CharacterStyle> styles = new ArrayList<>(1);
+                styles.add(new StyleSpan(Typeface.ITALIC));
+                final Node node = new StyleNode(styles);
+
+                return Parser.SubtreeSpec.createNonterminal(node, startIndex, endIndex);
+            }
+        };
+    }
+
+    public static List<Parser.Rule<Node>> createSimpleMarkdownRules() {
+        return createSimpleMarkdownRules(true);
+    }
+
+    public static List<Parser.Rule<Node>> createSimpleMarkdownRules(final boolean includeTextRule) {
         final List<Parser.Rule<Node>> rules = new ArrayList<>();
-        rules.add(RULE_ESCAPE);
-        rules.add(RULE_BOLD);
-        rules.add(RULE_UNDERLINE);
-        rules.add(RULE_ITALICS);
-        rules.add(RULE_STRIKETHRU);
+        rules.add(createEscapeRule());
+        rules.add(createBoldRule());
+        rules.add(createUnderlineRule());
+        rules.add(createItalicsRule());
+        rules.add(createStrikethruRule());
         if (includeTextRule) {
-            rules.add(RULE_TEXT);
+            rules.add(createTextRule());
         }
         return rules;
     }

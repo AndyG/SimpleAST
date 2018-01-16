@@ -29,7 +29,7 @@ public class ParserTest {
     @Before
     public void setup() {
         parser = new Parser();
-        parser.addRules(SimpleMarkdownRules.getSimpleMarkdownRules());
+        parser.addRules(SimpleMarkdownRules.createSimpleMarkdownRules());
         treeMatcher = new TreeMatcher();
         treeMatcher.registerDefaultMatchers();
     }

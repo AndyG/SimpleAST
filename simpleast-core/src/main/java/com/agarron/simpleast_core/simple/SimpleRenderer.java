@@ -21,7 +21,7 @@ public class SimpleRenderer {
     }
 
     public static SpannableStringBuilder renderBasicMarkdown(final CharSequence source) {
-        return render(source, SimpleMarkdownRules.getSimpleMarkdownRules());
+        return render(source, SimpleMarkdownRules.createSimpleMarkdownRules());
     }
 
     public static <T extends Node> SpannableStringBuilder render(final CharSequence source, final Collection<Parser.Rule<T>> rules) {
