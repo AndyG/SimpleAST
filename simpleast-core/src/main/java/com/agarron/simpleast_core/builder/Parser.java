@@ -1,6 +1,7 @@
 package com.agarron.simpleast_core.builder;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.agarron.simpleast_core.node.Node;
 import com.agarron.simpleast_core.node.Parent;
@@ -13,6 +14,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser<T extends Node> {
+
+    private static final String TAG = "Parser";
+
+    private boolean enableDebugging = false;
+
+    public Parser() {
+      this(false);
+    }
+
+    public Parser(final boolean enableDebugging) {
+      this.enableDebugging = enableDebugging;
+    }
 
     private final List<Rule<T>> rules = new ArrayList<>();
 
@@ -66,6 +79,7 @@ public class Parser<T extends Node> {
                 final Matcher matcher = rule.matcher.reset(inspectionSource);
 
                 if (matcher.find()) {
+                    logMatch(rule, inspectionSource);
                     final int matcherSourceEnd = matcher.end() + offset;
                     foundRule = true;
 
@@ -89,6 +103,9 @@ public class Parser<T extends Node> {
                     }
 
                     break;
+                } else {
+                    logMiss(rule, inspectionSource);
+                    Log.d(TAG, "MISS: rule with pattern: " + rule.matcher.pattern().toString() + " to source: " + inspectionSource);
                 }
             }
 
@@ -98,6 +115,18 @@ public class Parser<T extends Node> {
         }
 
         return root.getChildren();
+    }
+
+    private void logMatch(final Rule<T> rule, final CharSequence source) {
+        if (enableDebugging) {
+            Log.d(TAG, "MATCH: with rule with pattern: " + rule.matcher.pattern().toString() + " to source: " + source);
+        }
+    }
+
+    private void logMiss(final Rule<T> rule, final CharSequence source) {
+        if (enableDebugging) {
+            Log.d(TAG, "MISS: with rule with pattern: " + rule.matcher.pattern().toString() + " to source: " + source);
+        }
     }
 
     private static boolean isTextEmpty(final CharSequence text) {
