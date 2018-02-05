@@ -105,7 +105,6 @@ public class Parser<T extends Node> {
                     break;
                 } else {
                     logMiss(rule, inspectionSource);
-                    Log.d(TAG, "MISS: rule with pattern: " + rule.matcher.pattern().toString() + " to source: " + inspectionSource);
                 }
             }
 
