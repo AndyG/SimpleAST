@@ -5,43 +5,58 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.CharacterStyle;
 
-import com.agarron.simpleast_core.simple.SpannableRenderableParent;
+import com.agarron.simpleast_core.simple.SpannableRenderable;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class StyleNode extends SpannableRenderableParent {
+public class StyleNode implements SpannableRenderable, Parent {
 
-    public static final String TYPE = "style";
+  private static final String TYPE = "style";
 
-    public static StyleNode createWithText(final String content, final List<CharacterStyle> styles) {
-        final StyleNode styleNode = new StyleNode(styles);
-        styleNode.addChild(new TextNode(content));
-        return styleNode;
+  private final List<SpannableRenderable> children = new ArrayList<>();
+  private final List<CharacterStyle> styles;
+
+  public StyleNode(final List<CharacterStyle> styles) {
+    this.styles = styles;
+  }
+
+  public static StyleNode createWithText(final String content, final List<CharacterStyle> styles) {
+    final StyleNode styleNode = new StyleNode(styles);
+    styleNode.addChild(new TextNode(content));
+    return styleNode;
+  }
+
+  @Override
+  public String getType() {
+    return TYPE;
+  }
+
+  @Override
+  public void render(final SpannableStringBuilder builder, final Context context) {
+    final int startIndex = builder.length();
+
+    // First render all child nodes, as these are the nodes we want to apply the styles to.
+    for (final SpannableRenderable child : children) {
+      child.render(builder, context);
     }
 
-    private final List<CharacterStyle> styles;
-
-    public StyleNode(final List<CharacterStyle> styles) {
-        this.styles = styles;
+    for (final CharacterStyle style : styles) {
+      builder.setSpan(style, startIndex, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
+  }
 
-    public List<CharacterStyle> getStyles() {
-        return styles;
-    }
+  @Override
+  public List getChildren() {
+    return children;
+  }
 
-    @Override
-    public String getType() {
-        return TYPE;
-    }
+  @Override
+  public void addChild(Node child) {
+    children.add((SpannableRenderable) child);
+  }
 
-    @Override
-    public void render(final SpannableStringBuilder builder, final Context context) {
-        final int startIndex = builder.length();
-
-        super.render(builder, context);
-
-        for (final CharacterStyle style : styles) {
-            builder.setSpan(style, startIndex, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-    }
+  public List<CharacterStyle> getStyles() {
+    return styles;
+  }
 }
