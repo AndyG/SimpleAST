@@ -4,10 +4,10 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.agarron.simpleast_core.node.Node;
-import com.agarron.simpleast_core.node.Parent;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -48,13 +48,13 @@ public class Parser<T extends Node> {
         return this;
     }
 
-    public List<T> parse(final @Nullable CharSequence source) {
+    public List<Node> parse(final @Nullable CharSequence source) {
         return parse(source, false);
     }
 
-    public List<T> parse(final @Nullable CharSequence source, boolean isNested) {
+    public List<Node> parse(final @Nullable CharSequence source, boolean isNested) {
         final Stack<SubtreeSpec> stack = new Stack<>();
-        final Root<T> root = new Root<>();
+        final Node root = new Node("root");
 
         if (!isTextEmpty(source)) {
             stack.add(new SubtreeSpec<>(root, 0, source.length()));
@@ -84,7 +84,7 @@ public class Parser<T extends Node> {
                     foundRule = true;
 
                     final SubtreeSpec<T> newBuilder = rule.parse(matcher, this, isNested);
-                    final Parent<T> parent = (Parent<T>) builder.root;
+                    final Node parent = builder.root;
                     parent.addChild(newBuilder.root);
 
                     if (!newBuilder.isTerminal) {
@@ -113,7 +113,7 @@ public class Parser<T extends Node> {
             }
         }
 
-        return root.getChildren();
+        return root.hasChildren() ? root.getChildren() : Collections.<Node>emptyList();
     }
 
     private void logMatch(final Rule<T> rule, final CharSequence source) {
@@ -189,25 +189,5 @@ public class Parser<T extends Node> {
         }
 
         public abstract SubtreeSpec<T> parse(Matcher matcher, Parser<T> parser, boolean isNested);
-    }
-
-    private static class Root<T extends Node> implements Parent<T> {
-
-        private final List<T> children = new ArrayList<>();
-
-        @Override
-        public String getType() {
-            return "root";
-        }
-
-        @Override
-        public List<T> getChildren() {
-            return children;
-        }
-
-        @Override
-        public void addChild(T child) {
-            children.add(child);
-        }
     }
 }
