@@ -14,7 +14,7 @@ ext {
     siteUrl = 'https://github.com/angarron/SimpleAST'
     gitUrl = 'https://github.com/angarron/SimpleAST.git'
 
-    libraryVersion = '0.6.2'
+    libraryVersion = '1.0.0-alpha2'
 
     developerId = 'angarron'
     developerName = 'Anderson Garron'
@@ -60,4 +60,8 @@ apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.
 
 repositories {
     mavenCentral()
+}
+
+tasks.withType(Javadoc).all {
+    enabled = false
 }

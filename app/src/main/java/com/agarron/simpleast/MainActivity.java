@@ -12,7 +12,7 @@ import com.agarron.simpleast_core.builder.Parser;
 import com.agarron.simpleast_core.node.Node;
 import com.agarron.simpleast_core.node.StyleNode;
 import com.agarron.simpleast_core.node.TextNode;
-import com.agarron.simpleast_core.simple.RenderUtils;
+import com.agarron.simpleast_core.simple.SimpleRenderer;
 import com.agarron.simpleast_core.simple.SimpleMarkdownRules;
 
 import java.util.Collections;
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     findViewById(R.id.test_btn).setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        RenderUtils.renderBasicMarkdown(resultText, input.getText());
+        SimpleRenderer.renderBasicMarkdown(resultText, input.getText());
       }
     });
   }
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
     final String text = createTestText();
 
     for (int i = 0; i < times; i++) {
-      RenderUtils.renderBasicMarkdown(resultText, text);
+      SimpleRenderer.renderBasicMarkdown(resultText, text);
     }
   }
 }

@@ -9,7 +9,7 @@ import com.agarron.simpleast_core.renderer.DefaultRenderer;
 
 import java.util.Collection;
 
-public class RenderUtils {
+public class SimpleRenderer {
 
     public static void renderBasicMarkdown(final TextView textView, @StringRes final int sourceResId) {
         final CharSequence source = textView.getContext().getString(sourceResId);
