@@ -12,7 +12,7 @@ import com.agarron.simpleast_core.node.Node
 object SpannableRenderer {
 
   @JvmStatic
-  fun <T: SpannableStringBuilder> render(builder: T, ast: Collection<SpannableRenderableNode>, context: Context): T {
+  fun <T: SpannableStringBuilder> render(builder: T, ast: Collection<SpannableRenderableNode>, context: Context? = null): T {
     for (node in ast) {
       node.render(builder, context)
     }

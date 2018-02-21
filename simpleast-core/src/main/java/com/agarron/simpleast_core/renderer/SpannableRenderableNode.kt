@@ -5,5 +5,5 @@ import android.text.SpannableStringBuilder
 import com.agarron.simpleast_core.node.Node
 
 abstract class SpannableRenderableNode : Node() {
-  abstract fun render(builder: SpannableStringBuilder, context: Context)
+  abstract fun render(builder: SpannableStringBuilder, context: Context? = null)
 }

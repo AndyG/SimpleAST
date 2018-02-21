@@ -8,6 +8,7 @@ import android.text.style.CharacterStyle;
 import com.agarron.simpleast_core.renderer.SpannableRenderableNode;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class StyleNode extends SpannableRenderableNode {
   }
 
   @Override
-  public void render(@NotNull SpannableStringBuilder builder, @NotNull Context context) {
+  public void render(@NotNull SpannableStringBuilder builder, @Nullable Context context) {
     final int startIndex = builder.length();
 
     // First render all child nodes, as these are the nodes we want to apply the styles to.
