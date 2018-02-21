@@ -13,14 +13,14 @@ import com.agarron.simpleast_core.node.TextNode
  */
 open class DefaultRenderer {
 
-  protected val customRenderMethods: Map<Class<out Node>, (Node, SpannableStringBuilder) -> Unit> = emptyMap()
+  open protected val customRenderMethods: Map<Class<out Node>, (Node, SpannableStringBuilder) -> Unit> = emptyMap()
 
-  private val renderMethodsInternal: Map<Class<out Node>, (Node, SpannableStringBuilder) -> Unit> = customRenderMethods
-      .plus(mapOf(
-          StyleNode::class.java to { node, builder -> renderStyleNode(node as StyleNode, builder) },
-          TextNode::class.java to { node, builder -> renderTextNode(node as TextNode, builder) }
-      ))
-
+  private val renderMethodsInternal: Map<Class<out Node>, (Node, SpannableStringBuilder) -> Unit> by lazy {
+    customRenderMethods.plus(mapOf(
+        StyleNode::class.java to { node, builder -> renderStyleNode(node as StyleNode, builder) },
+        TextNode::class.java to { node, builder -> renderTextNode(node as TextNode, builder) }
+    ))
+  }
 
   fun render(ast: Collection<Node>): SpannableStringBuilder {
     val builder = SpannableStringBuilder()
