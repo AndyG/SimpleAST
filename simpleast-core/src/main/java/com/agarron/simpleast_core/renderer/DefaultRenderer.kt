@@ -35,7 +35,7 @@ open class DefaultRenderer {
   private fun renderNode(node: Node, builder: SpannableStringBuilder) {
     renderMethodsInternal[node.javaClass]
         ?.invoke(node, builder)
-        ?: throw IllegalArgumentException("invalid node of type: " + node.type)
+        ?: throw IllegalArgumentException("invalid node: ${node::class.java.simpleName}")
   }
 
   private fun renderStyleNode(styleNode: StyleNode, builder: SpannableStringBuilder) {
