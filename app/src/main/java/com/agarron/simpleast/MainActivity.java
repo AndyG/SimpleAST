@@ -12,8 +12,8 @@ import com.agarron.simpleast_core.builder.Parser;
 import com.agarron.simpleast_core.node.Node;
 import com.agarron.simpleast_core.node.StyleNode;
 import com.agarron.simpleast_core.node.TextNode;
+import com.agarron.simpleast_core.simple.RenderUtils;
 import com.agarron.simpleast_core.simple.SimpleMarkdownRules;
-import com.agarron.simpleast_core.simple.SimpleRenderer;
 
 import java.util.Collections;
 import java.util.List;
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     findViewById(R.id.test_btn).setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        SimpleRenderer.renderBasicMarkdown(resultText, input.getText());
+        RenderUtils.renderBasicMarkdown(resultText, input.getText());
       }
     });
   }
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
     final String text = createTestText();
 
     for (int i = 0; i < times; i++) {
-      SimpleRenderer.renderBasicMarkdown(resultText, text);
+      RenderUtils.renderBasicMarkdown(resultText, text);
     }
   }
 }

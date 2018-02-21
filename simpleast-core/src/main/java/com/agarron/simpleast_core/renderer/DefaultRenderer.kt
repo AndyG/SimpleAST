@@ -13,12 +13,12 @@ import com.agarron.simpleast_core.node.TextNode
  */
 open class DefaultRenderer {
 
-  protected val customRenderMethods: Map<String, (Node, SpannableStringBuilder) -> Unit> = emptyMap()
+  protected val customRenderMethods: Map<Class<out Node>, (Node, SpannableStringBuilder) -> Unit> = emptyMap()
 
-  private val renderMethodsInternal: Map<String, (Node, SpannableStringBuilder) -> Unit> = customRenderMethods
+  private val renderMethodsInternal: Map<Class<out Node>, (Node, SpannableStringBuilder) -> Unit> = customRenderMethods
       .plus(mapOf(
-          StyleNode.TYPE to { node, builder -> renderStyleNode(node as StyleNode, builder) },
-          TextNode.TYPE to { node, builder -> renderTextNode(node as TextNode, builder) }
+          StyleNode::class.java to { node, builder -> renderStyleNode(node as StyleNode, builder) },
+          TextNode::class.java to { node, builder -> renderTextNode(node as TextNode, builder) }
       ))
 
 
@@ -33,7 +33,7 @@ open class DefaultRenderer {
   }
 
   private fun renderNode(node: Node, builder: SpannableStringBuilder) {
-    renderMethodsInternal[node.type]
+    renderMethodsInternal[node.javaClass]
         ?.invoke(node, builder)
         ?: throw IllegalArgumentException("invalid node of type: " + node.type)
   }
