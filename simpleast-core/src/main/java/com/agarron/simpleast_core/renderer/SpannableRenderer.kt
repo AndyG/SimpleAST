@@ -12,11 +12,9 @@ import com.agarron.simpleast_core.node.Node
 object SpannableRenderer {
 
   @JvmStatic
-  fun <T: SpannableStringBuilder> render(builder: T, ast: Collection<Node>, context: Context): T {
+  fun <T: SpannableStringBuilder> render(builder: T, ast: Collection<SpannableRenderableNode>, context: Context): T {
     for (node in ast) {
-      (node as? SpannableRenderableNode)
-          ?.render(builder, context)
-          ?: throw IllegalArgumentException("invalid node: ${node::class.java.simpleName}")
+      node.render(builder, context)
     }
 
     return builder

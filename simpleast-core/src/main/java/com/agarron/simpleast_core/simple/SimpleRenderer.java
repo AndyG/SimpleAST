@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.agarron.simpleast_core.builder.Parser;
 import com.agarron.simpleast_core.node.Node;
+import com.agarron.simpleast_core.renderer.SpannableRenderableNode;
 import com.agarron.simpleast_core.renderer.SpannableRenderer;
 
 import java.util.Collection;
@@ -26,9 +27,9 @@ public class SimpleRenderer {
         return render(source, SimpleMarkdownRules.createSimpleMarkdownRules(), context);
     }
 
-    public static SpannableStringBuilder render(final CharSequence source, final Collection<Parser.Rule<Node>> rules, final Context context) {
-        final Parser<Node> parser = new Parser<>();
-        for (final Parser.Rule<Node> rule : rules) {
+    public static SpannableStringBuilder render(final CharSequence source, final Collection<Parser.Rule<SpannableRenderableNode>> rules, final Context context) {
+        final Parser<SpannableRenderableNode> parser = new Parser<>();
+        for (final Parser.Rule<SpannableRenderableNode> rule : rules) {
             parser.addRule(rule);
         }
 

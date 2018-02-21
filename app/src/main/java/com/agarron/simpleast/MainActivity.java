@@ -12,6 +12,7 @@ import com.agarron.simpleast_core.builder.Parser;
 import com.agarron.simpleast_core.node.Node;
 import com.agarron.simpleast_core.node.StyleNode;
 import com.agarron.simpleast_core.node.TextNode;
+import com.agarron.simpleast_core.renderer.SpannableRenderableNode;
 import com.agarron.simpleast_core.simple.SimpleMarkdownRules;
 import com.agarron.simpleast_core.simple.SimpleRenderer;
 
@@ -59,23 +60,23 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
-  private List<Parser.Rule<Node>> getRules() {
-    final List<Parser.Rule<Node>> rules = SimpleMarkdownRules.createSimpleMarkdownRules(false);
+  private List<Parser.Rule<SpannableRenderableNode>> getRules() {
+    final List<Parser.Rule<SpannableRenderableNode>> rules = SimpleMarkdownRules.createSimpleMarkdownRules(false);
 
-    final Parser.Rule<Node> replacementTextRule = new Parser.Rule<Node>(SimpleMarkdownRules.PATTERN_TEXT, true) {
+    final Parser.Rule<SpannableRenderableNode> replacementTextRule = new Parser.Rule<SpannableRenderableNode>(SimpleMarkdownRules.PATTERN_TEXT, true) {
       @Override
-      public Parser.SubtreeSpec<Node> parse(Matcher matcher, Parser<Node> parser, boolean isNested) {
+      public Parser.SubtreeSpec<SpannableRenderableNode> parse(Matcher matcher, Parser<SpannableRenderableNode> parser, boolean isNested) {
         if (isNested) {
-          return Parser.SubtreeSpec.createTerminal((Node) new TextNode(matcher.group()));
+          return Parser.SubtreeSpec.createTerminal((SpannableRenderableNode) new TextNode(matcher.group()));
         } else {
           final String target = matcher.group().replace("youtube", "YOUTUBEWASHERE");
-          final List<Node> innerNodes = parser.parse(target, true);
+          final List<SpannableRenderableNode> innerNodes = parser.parse(target, true);
           final StyleNode parentNode = new StyleNode(Collections.<CharacterStyle>emptyList());
           for (final Node child : innerNodes) {
             parentNode.addChild(child);
           }
 
-          return Parser.SubtreeSpec.createTerminal((Node) parentNode);
+          return Parser.SubtreeSpec.createTerminal((SpannableRenderableNode) parentNode);
         }
       }
     };
