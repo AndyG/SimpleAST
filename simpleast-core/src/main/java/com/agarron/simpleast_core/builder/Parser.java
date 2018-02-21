@@ -28,12 +28,12 @@ public class Parser<T extends Node> {
 
   private final List<Rule<T>> rules = new ArrayList<>();
 
-  public Parser addRule(final Rule<T> rule) {
+  public Parser<T> addRule(final Rule<T> rule) {
     rules.add(rule);
     return this;
   }
 
-  public Parser addRules(final Collection<Rule<T>> rules) {
+  public Parser<T> addRules(final Collection<Rule<T>> rules) {
     for (final Rule<T> rule : rules) {
       addRule(rule);
     }
