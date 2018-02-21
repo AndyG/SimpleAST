@@ -12,8 +12,8 @@ import com.agarron.simpleast_core.builder.Parser;
 import com.agarron.simpleast_core.node.Node;
 import com.agarron.simpleast_core.node.StyleNode;
 import com.agarron.simpleast_core.node.TextNode;
-import com.agarron.simpleast_core.simple.SimpleRenderer;
 import com.agarron.simpleast_core.simple.SimpleMarkdownRules;
+import com.agarron.simpleast_core.simple.SimpleRenderer;
 
 import java.util.Collections;
 import java.util.List;
@@ -59,12 +59,12 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
-  private List<Parser.Rule> getRules() {
-    final List<Parser.Rule> rules = SimpleMarkdownRules.createSimpleMarkdownRules(false);
+  private List<Parser.Rule<Node>> getRules() {
+    final List<Parser.Rule<Node>> rules = SimpleMarkdownRules.createSimpleMarkdownRules(false);
 
-    final Parser.Rule replacementTextRule = new Parser.Rule(SimpleMarkdownRules.PATTERN_TEXT, true) {
+    final Parser.Rule<Node> replacementTextRule = new Parser.Rule<Node>(SimpleMarkdownRules.PATTERN_TEXT, true) {
       @Override
-      public Parser.SubtreeSpec parse(Matcher matcher, Parser parser, boolean isNested) {
+      public Parser.SubtreeSpec<Node> parse(Matcher matcher, Parser<Node> parser, boolean isNested) {
         if (isNested) {
           return Parser.SubtreeSpec.createTerminal((Node) new TextNode(matcher.group()));
         } else {
@@ -119,3 +119,4 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 }
+

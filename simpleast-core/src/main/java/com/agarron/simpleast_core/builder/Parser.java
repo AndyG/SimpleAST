@@ -7,13 +7,12 @@ import com.agarron.simpleast_core.node.Node;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Parser {
+public class Parser<T extends Node> {
 
   private static final String TAG = "Parser";
 
@@ -27,41 +26,34 @@ public class Parser {
     this.enableDebugging = enableDebugging;
   }
 
-  private final List<Rule> rules = new ArrayList<>();
+  private final List<Rule<T>> rules = new ArrayList<>();
 
-  public Parser addRule(final Rule rule) {
+  public Parser addRule(final Rule<T> rule) {
     rules.add(rule);
     return this;
   }
 
-  public Parser addRules(final Collection<Rule> rules) {
-    for (final Rule rule : rules) {
+  public Parser addRules(final Collection<Rule<T>> rules) {
+    for (final Rule<T> rule : rules) {
       addRule(rule);
     }
     return this;
   }
 
-  public Parser addRules(final Rule... rules) {
-    for (final Rule rule : rules) {
-      addRule(rule);
-    }
-    return this;
-  }
-
-  public List<Node> parse(final @Nullable CharSequence source) {
+  public List<T> parse(final @Nullable CharSequence source) {
     return parse(source, false);
   }
 
-  public List<Node> parse(final @Nullable CharSequence source, boolean isNested) {
-    final Stack<SubtreeSpec> stack = new Stack<>();
-    final Node root = new Node("root");
+  public List<T> parse(final @Nullable CharSequence source, boolean isNested) {
+    final Stack<SubtreeSpec<T>> stack = new Stack<>();
+    final List<T> nodes = new ArrayList<>();
 
     if (!isTextEmpty(source)) {
-      stack.add(new SubtreeSpec(root, 0, source.length()));
+      stack.add(new SubtreeSpec<T>(null, 0, source.length()));
     }
 
     while (!stack.isEmpty()) {
-      final SubtreeSpec builder = stack.pop();
+      final SubtreeSpec<T> builder = stack.pop();
 
       if (builder.startIndex >= builder.endIndex) {
         break;
@@ -71,7 +63,7 @@ public class Parser {
       final int offset = builder.startIndex;
 
       boolean foundRule = false;
-      for (final Rule rule : rules) {
+      for (final Rule<T> rule : rules) {
         if (isNested && !rule.applyOnNestedParse) {
           continue;
         }
@@ -83,9 +75,15 @@ public class Parser {
           final int matcherSourceEnd = matcher.end() + offset;
           foundRule = true;
 
-          final SubtreeSpec newBuilder = rule.parse(matcher, this, isNested);
-          final Node parent = builder.root;
-          parent.addChild(newBuilder.root);
+          final SubtreeSpec<T> newBuilder = rule.parse(matcher, this, isNested);
+          final T parent = builder.root;
+
+          if (parent != null) {
+            parent.addChild(newBuilder.root);
+          } else {
+            // If the parent is null, add the node to the top level node list.
+            nodes.add(newBuilder.root);
+          }
 
           if (!newBuilder.isTerminal) {
             newBuilder.applyOffset(offset);
@@ -113,7 +111,7 @@ public class Parser {
       }
     }
 
-    return root.hasChildren() ? root.getChildren() : Collections.<Node>emptyList();
+    return nodes;
   }
 
   private void logMatch(final Rule rule, final CharSequence source) {
@@ -142,28 +140,28 @@ public class Parser {
    * For terminal subtrees, the root will simply be added to the tree and no additional parsing will
    * take place on the text.
    */
-  public static class SubtreeSpec {
-    private final Node root;
+  public static class SubtreeSpec<T extends Node> {
+    private final T root;
     private final boolean isTerminal;
     private int startIndex;
     private int endIndex;
 
-    public static SubtreeSpec createNonterminal(Node node, int startIndex, int endIndex) {
-      return new SubtreeSpec(node, startIndex, endIndex);
+    public static <T extends Node> SubtreeSpec<T> createNonterminal(T node, int startIndex, int endIndex) {
+      return new SubtreeSpec<>(node, startIndex, endIndex);
     }
 
-    public static  SubtreeSpec createTerminal(Node node) {
-      return new SubtreeSpec(node);
+    public static <T extends Node> SubtreeSpec<T> createTerminal(T node) {
+      return new SubtreeSpec<>(node);
     }
 
-    private SubtreeSpec(Node root, int startIndex, int endIndex) {
+    private SubtreeSpec(T root, int startIndex, int endIndex) {
       this.root = root;
       this.isTerminal = false;
       this.startIndex = startIndex;
       this.endIndex = endIndex;
     }
 
-    private SubtreeSpec(Node root) {
+    private SubtreeSpec(T root) {
       this.root = root;
       this.isTerminal = true;
     }
@@ -174,7 +172,7 @@ public class Parser {
     }
   }
 
-  public static abstract class Rule {
+  public static abstract class Rule<T extends Node> {
 
     private final Matcher matcher;
     private final boolean applyOnNestedParse;
@@ -188,6 +186,6 @@ public class Parser {
       this(pattern, false);
     }
 
-    public abstract SubtreeSpec parse(Matcher matcher, Parser parser, boolean isNested);
+    public abstract SubtreeSpec<T> parse(Matcher matcher, Parser<T> parser, boolean isNested);
   }
 }
