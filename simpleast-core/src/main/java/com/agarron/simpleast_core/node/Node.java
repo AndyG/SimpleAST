@@ -5,13 +5,7 @@ import java.util.List;
 
 public class Node {
 
-  public final String type;
-
   private List<Node> children;
-
-  public Node(final String type) {
-    this.type = type;
-  }
 
   public List<Node> getChildren() {
     return children;

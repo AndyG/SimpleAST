@@ -6,12 +6,9 @@ import java.util.List;
 
 public class StyleNode extends Node {
 
-  public static final String TYPE = "style";
-
   public final List<CharacterStyle> styles;
 
   public StyleNode(final List<CharacterStyle> styles) {
-    super(TYPE);
     this.styles = styles;
   }
 
