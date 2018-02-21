@@ -5,7 +5,7 @@ import android.text.SpannableStringBuilder;
 import android.widget.TextView;
 
 import com.agarron.simpleast_core.builder.Parser;
-import com.agarron.simpleast_core.renderer.Renderer;
+import com.agarron.simpleast_core.renderer.DefaultRenderer;
 
 import java.util.Collection;
 
@@ -30,6 +30,6 @@ public class SimpleRenderer {
             parser.addRule(rule);
         }
 
-        return new Renderer().render(parser.parse(source, false));
+        return new DefaultRenderer().render(parser.parse(source, false));
     }
 }
