@@ -5,9 +5,9 @@ package com.agarron.simpleast_core.node
  */
 open class Node {
 
-  private var children: MutableList<Node>? = null
+  private var children: MutableCollection<Node>? = null
 
-  fun getChildren(): List<Node>? = children
+  fun getChildren(): Collection<Node>? = children
 
   fun hasChildren(): Boolean = children?.isNotEmpty() == true
 
