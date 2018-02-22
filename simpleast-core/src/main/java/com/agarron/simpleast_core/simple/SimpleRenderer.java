@@ -26,6 +26,10 @@ public class SimpleRenderer {
     return render(source, SimpleMarkdownRules.createSimpleMarkdownRules(), context);
   }
 
+  public static SpannableStringBuilder renderBasicMarkdown(final CharSequence source) {
+    return render(source, SimpleMarkdownRules.createSimpleMarkdownRules(), null);
+  }
+
   public static SpannableStringBuilder render(final CharSequence source, final Collection<Parser.Rule<SpannableRenderableNode>> rules, final Context context) {
     final Parser<SpannableRenderableNode> parser = new Parser<>();
     for (final Parser.Rule<SpannableRenderableNode> rule : rules) {
