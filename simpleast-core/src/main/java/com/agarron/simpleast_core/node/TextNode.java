@@ -7,6 +7,7 @@ import android.text.SpannableStringBuilder;
 import com.agarron.simpleast_core.renderer.SpannableRenderableNode;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class TextNode extends SpannableRenderableNode {
 
@@ -17,7 +18,7 @@ public class TextNode extends SpannableRenderableNode {
     }
 
   @Override
-  public void render(@NotNull SpannableStringBuilder builder, @NotNull Context context) {
+  public void render(@NotNull SpannableStringBuilder builder, @Nullable Context context) {
     builder.append(content);
   }
 }
