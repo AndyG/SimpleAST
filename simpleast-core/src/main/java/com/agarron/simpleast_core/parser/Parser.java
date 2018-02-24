@@ -1,4 +1,4 @@
-package com.agarron.simpleast_core.builder;
+package com.agarron.simpleast_core.parser;
 
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Parser<T extends Node> {
 
@@ -64,11 +63,11 @@ public class Parser<T extends Node> {
 
       boolean foundRule = false;
       for (final Rule<T> rule : rules) {
-        if (isNested && !rule.applyOnNestedParse) {
+        if (isNested && !rule.getApplyOnNestedParse()) {
           continue;
         }
 
-        final Matcher matcher = rule.matcher.reset(inspectionSource);
+        final Matcher matcher = rule.getMatcher().reset(inspectionSource);
 
         if (matcher.find()) {
           logMatch(rule, inspectionSource);
@@ -116,13 +115,13 @@ public class Parser<T extends Node> {
 
   private void logMatch(final Rule rule, final CharSequence source) {
     if (enableDebugging) {
-      Log.i(TAG, "MATCH: with rule with pattern: " + rule.matcher.pattern().toString() + " to source: " + source);
+      Log.i(TAG, "MATCH: with rule with pattern: " + rule.getMatcher().pattern().toString() + " to source: " + source);
     }
   }
 
   private void logMiss(final Rule rule, final CharSequence source) {
     if (enableDebugging) {
-      Log.i(TAG, "MISS: with rule with pattern: " + rule.matcher.pattern().toString() + " to source: " + source);
+      Log.i(TAG, "MISS: with rule with pattern: " + rule.getMatcher().pattern().toString() + " to source: " + source);
     }
   }
 
@@ -170,22 +169,5 @@ public class Parser<T extends Node> {
       startIndex += offset;
       endIndex += offset;
     }
-  }
-
-  public static abstract class Rule<T extends Node> {
-
-    private final Matcher matcher;
-    private final boolean applyOnNestedParse;
-
-    public Rule(final Pattern pattern, final boolean applyOnNestedParse) {
-      this.matcher = pattern.matcher("");
-      this.applyOnNestedParse = applyOnNestedParse;
-    }
-
-    public Rule(final Pattern pattern) {
-      this(pattern, false);
-    }
-
-    public abstract SubtreeSpec<T> parse(Matcher matcher, Parser<T> parser, boolean isNested);
   }
 }

@@ -6,9 +6,10 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 
-import com.agarron.simpleast_core.builder.Parser;
 import com.agarron.simpleast_core.node.StyleNode;
 import com.agarron.simpleast_core.node.TextNode;
+import com.agarron.simpleast_core.parser.Parser;
+import com.agarron.simpleast_core.parser.Rule;
 import com.agarron.simpleast_core.renderer.SpannableRenderableNode;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class SimpleMarkdownRules {
           ")\\*(?!\\*)"
   );
 
-  public static Parser.Rule<SpannableRenderableNode> createBoldRule() {
+  public static Rule<SpannableRenderableNode> createBoldRule() {
     return createSimpleStyleRule(PATTERN_BOLD, new StyleFactory() {
       @Override
       public CharacterStyle get() {
@@ -50,7 +51,7 @@ public class SimpleMarkdownRules {
     });
   }
 
-  public static Parser.Rule<SpannableRenderableNode> createUnderlineRule() {
+  public static Rule<SpannableRenderableNode> createUnderlineRule() {
     return createSimpleStyleRule(PATTERN_UNDERLINE, new StyleFactory() {
       @Override
       public CharacterStyle get() {
@@ -59,7 +60,7 @@ public class SimpleMarkdownRules {
     });
   }
 
-  public static Parser.Rule<SpannableRenderableNode> createStrikethruRule() {
+  public static Rule<SpannableRenderableNode> createStrikethruRule() {
     return createSimpleStyleRule(PATTERN_STRIKETHRU, new StyleFactory() {
       @Override
       public CharacterStyle get() {
@@ -68,8 +69,8 @@ public class SimpleMarkdownRules {
     });
   }
 
-  public static Parser.Rule<SpannableRenderableNode> createTextRule() {
-    return new Parser.Rule<SpannableRenderableNode>(PATTERN_TEXT, true) {
+  public static Rule<SpannableRenderableNode> createTextRule() {
+    return new Rule<SpannableRenderableNode>(PATTERN_TEXT, true) {
       @Override
       public Parser.SubtreeSpec<SpannableRenderableNode> parse(Matcher matcher, Parser parser, boolean isNested) {
         final SpannableRenderableNode node = new TextNode(matcher.group());
@@ -78,8 +79,8 @@ public class SimpleMarkdownRules {
     };
   }
 
-  public static Parser.Rule<SpannableRenderableNode> createEscapeRule() {
-    return new Parser.Rule<SpannableRenderableNode>(PATTERN_ESCAPE, false) {
+  public static Rule<SpannableRenderableNode> createEscapeRule() {
+    return new Rule<SpannableRenderableNode>(PATTERN_ESCAPE, false) {
       @Override
       public Parser.SubtreeSpec<SpannableRenderableNode> parse(Matcher matcher, Parser parser, boolean isNested) {
         return Parser.SubtreeSpec.createTerminal((SpannableRenderableNode) new TextNode(matcher.group(1)));
@@ -87,8 +88,8 @@ public class SimpleMarkdownRules {
     };
   }
 
-  public static Parser.Rule<SpannableRenderableNode> createItalicsRule() {
-    return new Parser.Rule<SpannableRenderableNode>(PATTERN_ITALICS, false) {
+  public static Rule<SpannableRenderableNode> createItalicsRule() {
+    return new Rule<SpannableRenderableNode>(PATTERN_ITALICS, false) {
       @Override
       public Parser.SubtreeSpec<SpannableRenderableNode> parse(final Matcher matcher, Parser parser, boolean isNested) {
         final int startIndex, endIndex;
@@ -110,12 +111,12 @@ public class SimpleMarkdownRules {
     };
   }
 
-  public static List<Parser.Rule<SpannableRenderableNode>> createSimpleMarkdownRules() {
+  public static List<Rule<SpannableRenderableNode>> createSimpleMarkdownRules() {
     return createSimpleMarkdownRules(true);
   }
 
-  public static List<Parser.Rule<SpannableRenderableNode>> createSimpleMarkdownRules(final boolean includeTextRule) {
-    final List<Parser.Rule<SpannableRenderableNode>> rules = new ArrayList<>();
+  public static List<Rule<SpannableRenderableNode>> createSimpleMarkdownRules(final boolean includeTextRule) {
+    final List<Rule<SpannableRenderableNode>> rules = new ArrayList<>();
     rules.add(createEscapeRule());
     rules.add(createBoldRule());
     rules.add(createUnderlineRule());
@@ -127,8 +128,8 @@ public class SimpleMarkdownRules {
     return rules;
   }
 
-  private static Parser.Rule<SpannableRenderableNode> createSimpleStyleRule(final Pattern pattern, final StyleFactory styleFactory) {
-    return new Parser.Rule<SpannableRenderableNode>(pattern, false) {
+  private static Rule<SpannableRenderableNode> createSimpleStyleRule(final Pattern pattern, final StyleFactory styleFactory) {
+    return new Rule<SpannableRenderableNode>(pattern, false) {
       @Override
       public Parser.SubtreeSpec<SpannableRenderableNode> parse(Matcher matcher, Parser parser, boolean isNested) {
         final SpannableRenderableNode node = new StyleNode(Collections.singletonList(styleFactory.get()));

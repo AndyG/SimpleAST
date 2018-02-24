@@ -3,7 +3,6 @@ package com.agarron.simpleast_core.utils;
 import com.agarron.simpleast_core.node.Node;
 
 import java.util.Collection;
-import java.util.List;
 
 public class ASTUtils {
     public static void traversePostOrder(final Collection<? extends Node> ast, final NodeProcessor nodeProcessor) {
@@ -14,7 +13,7 @@ public class ASTUtils {
 
     private static void traversePostOrderSubtree(final Node node, final NodeProcessor nodeProcessor) {
         if (node.hasChildren()) {
-            final List<Node> children = node.getChildren();
+            final Iterable<Node> children = node.getChildren();
             for (final Node child : children) {
                 traversePostOrderSubtree(child, nodeProcessor);
             }

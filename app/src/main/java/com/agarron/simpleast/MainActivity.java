@@ -8,10 +8,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.agarron.simpleast_core.builder.Parser;
 import com.agarron.simpleast_core.node.Node;
 import com.agarron.simpleast_core.node.StyleNode;
 import com.agarron.simpleast_core.node.TextNode;
+import com.agarron.simpleast_core.parser.Parser;
+import com.agarron.simpleast_core.parser.Rule;
 import com.agarron.simpleast_core.renderer.SpannableRenderableNode;
 import com.agarron.simpleast_core.simple.SimpleMarkdownRules;
 import com.agarron.simpleast_core.simple.SimpleRenderer;
@@ -60,10 +61,10 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
-  private List<Parser.Rule<SpannableRenderableNode>> getRules() {
-    final List<Parser.Rule<SpannableRenderableNode>> rules = SimpleMarkdownRules.createSimpleMarkdownRules(false);
+  private List<Rule<SpannableRenderableNode>> getRules() {
+    final List<Rule<SpannableRenderableNode>> rules = SimpleMarkdownRules.createSimpleMarkdownRules(false);
 
-    final Parser.Rule<SpannableRenderableNode> replacementTextRule = new Parser.Rule<SpannableRenderableNode>(SimpleMarkdownRules.PATTERN_TEXT, true) {
+    final Rule<SpannableRenderableNode> replacementTextRule = new Rule<SpannableRenderableNode>(SimpleMarkdownRules.PATTERN_TEXT, true) {
       @Override
       public Parser.SubtreeSpec<SpannableRenderableNode> parse(Matcher matcher, Parser<SpannableRenderableNode> parser, boolean isNested) {
         if (isNested) {

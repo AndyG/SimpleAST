@@ -4,7 +4,7 @@ import android.graphics.Typeface;
 import android.text.style.CharacterStyle;
 import android.text.style.StyleSpan;
 
-import com.agarron.simpleast_core.builder.Parser;
+import com.agarron.simpleast_core.parser.Parser;
 import com.agarron.simpleast_core.node.Node;
 import com.agarron.simpleast_core.node.StyleNode;
 import com.agarron.simpleast_core.node.TextNode;
