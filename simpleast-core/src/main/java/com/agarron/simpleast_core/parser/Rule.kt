@@ -1,7 +1,6 @@
 package com.agarron.simpleast_core.parser
 
 import com.agarron.simpleast_core.node.Node
-import com.agarron.simpleast_core.parser.Parser.SubtreeSpec
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
