@@ -84,20 +84,21 @@ public class Parser<T extends Node> {
             nodes.add(newBuilder.root);
           }
 
-          if (!newBuilder.isTerminal) {
-            newBuilder.applyOffset(offset);
-            stack.push(newBuilder);
-          }
-
-          // We want to speak in terms of indices within the source string,
-          // but the Rules only see the matchers in the context of the substring
-          // being examined. Adding this offset address that issue.
-
           // In case the last match didn't consume the rest of the source for this subtree,
           // make sure the rest of the source is consumed.
           if (matcherSourceEnd != builder.endIndex) {
             stack.push(SubtreeSpec.createNonterminal(parent, matcherSourceEnd, builder.endIndex));
           }
+
+          // We want to speak in terms of indices within the source string,
+          // but the Rules only see the matchers in the context of the substring
+          // being examined. Adding this offset address that issue.
+          if (!newBuilder.isTerminal) {
+            newBuilder.applyOffset(offset);
+            stack.push(newBuilder);
+          }
+
+          System.out.println("source: " + inspectionSource + " -- depth: " + stack.size());
 
           break;
         } else {

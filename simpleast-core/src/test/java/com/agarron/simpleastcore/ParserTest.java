@@ -8,6 +8,7 @@ import com.agarron.simpleast_core.parser.Parser;
 import com.agarron.simpleast_core.node.Node;
 import com.agarron.simpleast_core.node.StyleNode;
 import com.agarron.simpleast_core.node.TextNode;
+import com.agarron.simpleast_core.renderer.SpannableRenderableNode;
 import com.agarron.simpleast_core.simple.SimpleMarkdownRules;
 import com.agarron.simpleast_core.utils.TreeMatcher;
 
@@ -23,12 +24,12 @@ import java.util.List;
 
 public class ParserTest {
 
-    private Parser parser;
+    private Parser<SpannableRenderableNode> parser;
     private TreeMatcher treeMatcher;
 
     @Before
     public void setup() {
-        parser = new Parser();
+        parser = new Parser<>();
         parser.addRules(SimpleMarkdownRules.createSimpleMarkdownRules());
         treeMatcher = new TreeMatcher();
         treeMatcher.registerDefaultMatchers();
@@ -41,13 +42,13 @@ public class ParserTest {
 
     @Test
     public void testEmptyParse() throws Exception {
-        final List<Node> ast = parser.parse("");
+        final List<SpannableRenderableNode> ast = parser.parse("");
         Assert.assertTrue(ast.isEmpty());
     }
 
     @Test
     public void testParseFormattedText() throws Exception {
-        final List<Node> ast = parser.parse("**bold**");
+        final List<SpannableRenderableNode> ast = parser.parse("**bold**");
 
         final StyleNode boldNode = StyleNode.createWithText("bold", Collections.singletonList((CharacterStyle) new StyleSpan(Typeface.BOLD)));
 
@@ -57,7 +58,7 @@ public class ParserTest {
 
     @Test
     public void testParseLeadingFormatting() throws Exception {
-        final List<Node> ast = parser.parse("**bold** and not bold");
+        final List<SpannableRenderableNode> ast = parser.parse("**bold** and not bold");
 
         final StyleNode boldNode = StyleNode.createWithText("bold", Collections.singletonList((CharacterStyle) new StyleSpan(Typeface.BOLD)));
         final TextNode trailingText = new TextNode(" and not bold");
@@ -68,7 +69,7 @@ public class ParserTest {
 
     @Test
     public void testParseTrailingFormatting() throws Exception {
-        final List<Node> ast = parser.parse("not bold **and bold**");
+        final List<SpannableRenderableNode> ast = parser.parse("not bold **and bold**");
 
         final TextNode leadingText = new TextNode("not bold ");
         final StyleNode boldNode = StyleNode.createWithText("and bold", Collections.singletonList((CharacterStyle) new StyleSpan(Typeface.BOLD)));
@@ -79,7 +80,11 @@ public class ParserTest {
 
     @Test
     public void testNestedFormatting() throws Exception {
-        final List<Node> ast = parser.parse("**bold *and italics* and more bold**");
+//        final List<SpannableRenderableNode> ast = parser.parse("*** test1 ** test2 * test3 * test4 ** test5 ***");
+        final List<SpannableRenderableNode> ast = parser.parse("**bold *and italics* and more bold**");
+//        final List<Node> ast = parser.parse("______" +
+//            "t"
+//        + "______");
 
         final StyleNode boldNode = new StyleNode(Collections.singletonList((CharacterStyle) new StyleSpan(Typeface.BOLD)));
         boldNode.addChild(new TextNode("bold "));
