@@ -8,6 +8,6 @@ abstract class Rule<T : Node> @JvmOverloads constructor(pattern: Pattern, val ap
 
   val matcher: Matcher = pattern.matcher("")
 
-  abstract fun parse(matcher: Matcher, parser: Parser<T>, isNested: Boolean): SubtreeSpec<T>
+  abstract fun parse(matcher: Matcher, parser: Parser<T>, isNested: Boolean): ParseSpec<T>
 }
 

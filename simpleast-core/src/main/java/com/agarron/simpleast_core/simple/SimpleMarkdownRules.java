@@ -10,7 +10,7 @@ import com.agarron.simpleast_core.node.StyleNode;
 import com.agarron.simpleast_core.node.TextNode;
 import com.agarron.simpleast_core.parser.Parser;
 import com.agarron.simpleast_core.parser.Rule;
-import com.agarron.simpleast_core.parser.SubtreeSpec;
+import com.agarron.simpleast_core.parser.ParseSpec;
 import com.agarron.simpleast_core.renderer.SpannableRenderableNode;
 
 import java.util.ArrayList;
@@ -73,9 +73,9 @@ public class SimpleMarkdownRules {
   public static Rule<SpannableRenderableNode> createTextRule() {
     return new Rule<SpannableRenderableNode>(PATTERN_TEXT, true) {
       @Override
-      public SubtreeSpec<SpannableRenderableNode> parse(Matcher matcher, Parser parser, boolean isNested) {
+      public ParseSpec<SpannableRenderableNode> parse(Matcher matcher, Parser parser, boolean isNested) {
         final SpannableRenderableNode node = new TextNode(matcher.group());
-        return SubtreeSpec.createTerminal(node);
+        return ParseSpec.createTerminal(node);
       }
     };
   }
@@ -83,8 +83,8 @@ public class SimpleMarkdownRules {
   public static Rule<SpannableRenderableNode> createEscapeRule() {
     return new Rule<SpannableRenderableNode>(PATTERN_ESCAPE, false) {
       @Override
-      public SubtreeSpec<SpannableRenderableNode> parse(Matcher matcher, Parser parser, boolean isNested) {
-        return SubtreeSpec.createTerminal((SpannableRenderableNode) new TextNode(matcher.group(1)));
+      public ParseSpec<SpannableRenderableNode> parse(Matcher matcher, Parser parser, boolean isNested) {
+        return ParseSpec.createTerminal((SpannableRenderableNode) new TextNode(matcher.group(1)));
       }
     };
   }
@@ -92,7 +92,7 @@ public class SimpleMarkdownRules {
   public static Rule<SpannableRenderableNode> createItalicsRule() {
     return new Rule<SpannableRenderableNode>(PATTERN_ITALICS, false) {
       @Override
-      public SubtreeSpec<SpannableRenderableNode> parse(final Matcher matcher, Parser parser, boolean isNested) {
+      public ParseSpec<SpannableRenderableNode> parse(final Matcher matcher, Parser parser, boolean isNested) {
         final int startIndex, endIndex;
         final String asteriskMatch = matcher.group(2);
         if (asteriskMatch != null && asteriskMatch.length() > 0) {
@@ -107,7 +107,7 @@ public class SimpleMarkdownRules {
         styles.add(new StyleSpan(Typeface.ITALIC));
 
         final SpannableRenderableNode node = new StyleNode(styles);
-        return SubtreeSpec.createNonterminal(node, startIndex, endIndex);
+        return ParseSpec.createNonterminal(node, startIndex, endIndex);
       }
     };
   }
@@ -132,9 +132,9 @@ public class SimpleMarkdownRules {
   private static Rule<SpannableRenderableNode> createSimpleStyleRule(final Pattern pattern, final StyleFactory styleFactory) {
     return new Rule<SpannableRenderableNode>(pattern, false) {
       @Override
-      public SubtreeSpec<SpannableRenderableNode> parse(Matcher matcher, Parser parser, boolean isNested) {
+      public ParseSpec<SpannableRenderableNode> parse(Matcher matcher, Parser parser, boolean isNested) {
         final SpannableRenderableNode node = new StyleNode(Collections.singletonList(styleFactory.get()));
-        return SubtreeSpec.createNonterminal(node, matcher.start(1), matcher.end(1));
+        return ParseSpec.createNonterminal(node, matcher.start(1), matcher.end(1));
       }
     };
   }

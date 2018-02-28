@@ -12,28 +12,28 @@ import com.agarron.simpleast_core.node.Node;
  * For terminal subtrees, the root will simply be added to the tree and no additional parsing will
  * take place on the text.
  */
-public class SubtreeSpec<T extends Node> {
+public class ParseSpec<T extends Node> {
   final T root;
   final boolean isTerminal;
   int startIndex;
   int endIndex;
 
-  public static <T extends Node> SubtreeSpec<T> createNonterminal(T node, int startIndex, int endIndex) {
-    return new SubtreeSpec<>(node, startIndex, endIndex);
+  public static <T extends Node> ParseSpec<T> createNonterminal(T node, int startIndex, int endIndex) {
+    return new ParseSpec<>(node, startIndex, endIndex);
   }
 
-  public static <T extends Node> SubtreeSpec<T> createTerminal(T node) {
-    return new SubtreeSpec<>(node);
+  public static <T extends Node> ParseSpec<T> createTerminal(T node) {
+    return new ParseSpec<>(node);
   }
 
-  SubtreeSpec(T root, int startIndex, int endIndex) {
+  ParseSpec(T root, int startIndex, int endIndex) {
     this.root = root;
     this.isTerminal = false;
     this.startIndex = startIndex;
     this.endIndex = endIndex;
   }
 
-  SubtreeSpec(T root) {
+  private ParseSpec(T root) {
     this.root = root;
     this.isTerminal = true;
   }
