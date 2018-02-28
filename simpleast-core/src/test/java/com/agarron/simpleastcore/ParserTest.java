@@ -50,7 +50,7 @@ public class ParserTest {
     public void testParseFormattedText() throws Exception {
         final List<SpannableRenderableNode> ast = parser.parse("**bold**");
 
-        final StyleNode boldNode = StyleNode.createWithText("bold", Collections.singletonList((CharacterStyle) new StyleSpan(Typeface.BOLD)));
+        final StyleNode boldNode = StyleNode.Companion.createWithText("bold", Collections.singletonList((CharacterStyle) new StyleSpan(Typeface.BOLD)));
 
         final List<? extends Node> model = Collections.singletonList(boldNode);
         Assert.assertTrue(treeMatcher.matches(model, ast));
@@ -60,7 +60,7 @@ public class ParserTest {
     public void testParseLeadingFormatting() throws Exception {
         final List<SpannableRenderableNode> ast = parser.parse("**bold** and not bold");
 
-        final StyleNode boldNode = StyleNode.createWithText("bold", Collections.singletonList((CharacterStyle) new StyleSpan(Typeface.BOLD)));
+        final StyleNode boldNode = StyleNode.Companion.createWithText("bold", Collections.singletonList((CharacterStyle) new StyleSpan(Typeface.BOLD)));
         final TextNode trailingText = new TextNode(" and not bold");
 
         final List<? extends Node> model = Arrays.asList(boldNode, trailingText);
@@ -72,7 +72,7 @@ public class ParserTest {
         final List<SpannableRenderableNode> ast = parser.parse("not bold **and bold**");
 
         final TextNode leadingText = new TextNode("not bold ");
-        final StyleNode boldNode = StyleNode.createWithText("and bold", Collections.singletonList((CharacterStyle) new StyleSpan(Typeface.BOLD)));
+        final StyleNode boldNode = StyleNode.Companion.createWithText("and bold", Collections.singletonList((CharacterStyle) new StyleSpan(Typeface.BOLD)));
 
         final List<? extends Node> model = Arrays.asList(leadingText, boldNode);
         Assert.assertTrue(treeMatcher.matches(model, ast));
@@ -88,7 +88,7 @@ public class ParserTest {
 
         final StyleNode boldNode = new StyleNode(Collections.singletonList((CharacterStyle) new StyleSpan(Typeface.BOLD)));
         boldNode.addChild(new TextNode("bold "));
-        boldNode.addChild(StyleNode.createWithText("and italics",
+        boldNode.addChild(StyleNode.Companion.createWithText("and italics",
             Collections.singletonList((CharacterStyle) new StyleSpan(Typeface.ITALIC))));
         boldNode.addChild(new TextNode(" and more bold"));
 

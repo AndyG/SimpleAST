@@ -86,7 +86,7 @@ public class TreeMatcher {
                 final TextNode textNode1 = (TextNode) node1;
                 final TextNode textNode2 = (TextNode) node2;
 
-                return textNode1.content.equals(textNode2.content);
+                return textNode1.getContent().equals(textNode2.getContent());
             }
         });
 
@@ -96,8 +96,8 @@ public class TreeMatcher {
                 final StyleNode styleNode1 = (StyleNode) node1;
                 final StyleNode styleNode2 = (StyleNode) node2;
 
-                final List<CharacterStyle> styles1 = styleNode1.styles;
-                final List<CharacterStyle> styles2 = styleNode2.styles;
+                final List<CharacterStyle> styles1 = styleNode1.getStyles();
+                final List<CharacterStyle> styles2 = styleNode2.getStyles();
 
                 if (styles1.size() != styles2.size()) {
                     return false;

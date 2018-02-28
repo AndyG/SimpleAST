@@ -2,6 +2,7 @@ package com.agarron.simpleast;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableStringBuilder;
 import android.text.style.CharacterStyle;
 import android.util.Log;
 import android.view.View;
@@ -15,9 +16,11 @@ import com.agarron.simpleast_core.parser.ParseSpec;
 import com.agarron.simpleast_core.parser.Parser;
 import com.agarron.simpleast_core.parser.Rule;
 import com.agarron.simpleast_core.renderer.SpannableRenderableNode;
+import com.agarron.simpleast_core.renderer.SpannableRenderer;
 import com.agarron.simpleast_core.simple.SimpleMarkdownRules;
 import com.agarron.simpleast_core.simple.SimpleRenderer;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -57,7 +60,10 @@ public class MainActivity extends AppCompatActivity {
     findViewById(R.id.test_btn).setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        SimpleRenderer.renderBasicMarkdown(resultText, input.getText());
+        final Parser<SpannableRenderableNode> parser = new Parser<>(true);
+        parser.addRules(SimpleMarkdownRules.createSimpleMarkdownRules());
+        final Collection<SpannableRenderableNode> nodes = parser.parse(input.getText());
+        resultText.setText(SpannableRenderer.render(new SpannableStringBuilder(), nodes, null));
       }
     });
   }
