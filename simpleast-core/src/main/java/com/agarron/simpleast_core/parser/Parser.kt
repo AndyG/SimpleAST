@@ -73,7 +73,7 @@ class Parser<T : Node> @JvmOverloads constructor(private val enableDebugging: Bo
             remainingParses.push(newBuilder)
           }
 
-          println("source: $inspectionSource -- depth: ${remainingParses.size}")
+//          println("source: $inspectionSource -- depth: ${remainingParses.size}")
 
           break
         } else {

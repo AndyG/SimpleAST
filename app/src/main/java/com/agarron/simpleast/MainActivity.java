@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
     final Rule<SpannableRenderableNode> replacementTextRule = new Rule<SpannableRenderableNode>(SimpleMarkdownRules.INSTANCE.getPATTERN_TEXT(), true) {
       @Override
-      public ParseSpec<SpannableRenderableNode> parse(Matcher matcher, Parser<SpannableRenderableNode> parser, boolean isNested) {
+      public ParseSpec<? extends SpannableRenderableNode> parse(Matcher matcher, Parser<SpannableRenderableNode> parser, boolean isNested) {
         if (isNested) {
           return ParseSpec.createTerminal(new TextNode(matcher.group()));
         } else {
