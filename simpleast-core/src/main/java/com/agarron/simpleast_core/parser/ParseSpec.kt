@@ -39,10 +39,12 @@ class ParseSpec<T : Node> {
 
   companion object {
 
+    @JvmStatic
     fun <T : Node> createNonterminal(node: T?, startIndex: Int, endIndex: Int): ParseSpec<T> {
       return ParseSpec(node, startIndex, endIndex)
     }
 
+    @JvmStatic
     fun <T : Node> createTerminal(node: T?): ParseSpec<T> {
       return ParseSpec(node)
     }

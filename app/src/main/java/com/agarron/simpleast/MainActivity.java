@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.agarron.simpleast_core.node.Node;
 import com.agarron.simpleast_core.node.StyleNode;
 import com.agarron.simpleast_core.node.TextNode;
+import com.agarron.simpleast_core.parser.ParseSpec;
 import com.agarron.simpleast_core.parser.Parser;
 import com.agarron.simpleast_core.parser.Rule;
 import com.agarron.simpleast_core.renderer.SpannableRenderableNode;
@@ -62,13 +63,13 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private List<Rule<SpannableRenderableNode>> getRules() {
-    final List<Rule<SpannableRenderableNode>> rules = SimpleMarkdownRules.INSTANCE.createSimpleMarkdownRules(false);
+    final List<Rule<SpannableRenderableNode>> rules = SimpleMarkdownRules.createSimpleMarkdownRules(false);
 
     final Rule<SpannableRenderableNode> replacementTextRule = new Rule<SpannableRenderableNode>(SimpleMarkdownRules.INSTANCE.getPATTERN_TEXT(), true) {
       @Override
-      public Parser.SubtreeSpec<SpannableRenderableNode> parse(Matcher matcher, Parser<SpannableRenderableNode> parser, boolean isNested) {
+      public ParseSpec<SpannableRenderableNode> parse(Matcher matcher, Parser<SpannableRenderableNode> parser, boolean isNested) {
         if (isNested) {
-          return Parser.SubtreeSpec.createTerminal((SpannableRenderableNode) new TextNode(matcher.group()));
+          return ParseSpec.createTerminal(new TextNode(matcher.group()));
         } else {
           final String target = matcher.group().replace("youtube", "YOUTUBEWASHERE");
           final List<SpannableRenderableNode> innerNodes = parser.parse(target, true);
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             parentNode.addChild(child);
           }
 
-          return Parser.SubtreeSpec.createTerminal((SpannableRenderableNode) parentNode);
+          return ParseSpec.createTerminal(parentNode);
         }
       }
     };

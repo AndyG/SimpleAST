@@ -22,7 +22,7 @@ class Parser<T : Node> @JvmOverloads constructor(private val enableDebugging: Bo
 
   @JvmOverloads
   fun parse(source: CharSequence?, isNested: Boolean = false): List<T> {
-    val remainingParses = Stack<ParseSpec<T>>()
+    val remainingParses = Stack<ParseSpec<out T>>()
     val topLevelNodes = ArrayList<T>()
 
     if (source != null && !source.isEmpty()) {

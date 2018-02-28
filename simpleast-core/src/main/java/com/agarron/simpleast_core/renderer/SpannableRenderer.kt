@@ -2,12 +2,9 @@ package com.agarron.simpleast_core.renderer
 
 import android.content.Context
 import android.text.SpannableStringBuilder
-import com.agarron.simpleast_core.node.Node
 
 /**
- * A renderer that knows how to render the [Node] types provided by default in the SimpleAST.
- *
- * Consumers may override [customRenderMethods] to provide additional methods for custom nodes.
+ * A renderer that knows how to render the [SpannableRenderableNode] instances.
  */
 object SpannableRenderer {
 
