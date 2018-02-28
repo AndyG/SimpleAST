@@ -62,9 +62,9 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private List<Rule<SpannableRenderableNode>> getRules() {
-    final List<Rule<SpannableRenderableNode>> rules = SimpleMarkdownRules.createSimpleMarkdownRules(false);
+    final List<Rule<SpannableRenderableNode>> rules = SimpleMarkdownRules.INSTANCE.createSimpleMarkdownRules(false);
 
-    final Rule<SpannableRenderableNode> replacementTextRule = new Rule<SpannableRenderableNode>(SimpleMarkdownRules.PATTERN_TEXT, true) {
+    final Rule<SpannableRenderableNode> replacementTextRule = new Rule<SpannableRenderableNode>(SimpleMarkdownRules.INSTANCE.getPATTERN_TEXT(), true) {
       @Override
       public Parser.SubtreeSpec<SpannableRenderableNode> parse(Matcher matcher, Parser<SpannableRenderableNode> parser, boolean isNested) {
         if (isNested) {

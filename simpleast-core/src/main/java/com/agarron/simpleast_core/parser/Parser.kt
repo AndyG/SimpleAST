@@ -26,7 +26,7 @@ class Parser<T : Node> @JvmOverloads constructor(private val enableDebugging: Bo
     val topLevelNodes = ArrayList<T>()
 
     if (source != null && !source.isEmpty()) {
-      remainingParses.add(ParseSpec<T>(null, 0, source.length))
+      remainingParses.add(ParseSpec(null, 0, source.length))
     }
 
     while (!remainingParses.isEmpty()) {
@@ -55,7 +55,9 @@ class Parser<T : Node> @JvmOverloads constructor(private val enableDebugging: Bo
           val newBuilder = rule.parse(matcher, this, isNested)
           val parent = builder.root
 
-          parent?.addChild(newBuilder.root) ?: topLevelNodes.add(newBuilder.root)
+          newBuilder.root?.let {
+            parent?.addChild(it) ?: topLevelNodes.add(it)
+          }
 
           // In case the last match didn't consume the rest of the source for this subtree,
           // make sure the rest of the source is consumed.
