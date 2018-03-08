@@ -1,14 +1,14 @@
-package com.agarron.simpleast_core.simple;
+package com.discord.simpleast.core.simple;
 
 import android.content.Context;
 import android.support.annotation.StringRes;
 import android.text.SpannableStringBuilder;
 import android.widget.TextView;
 
-import com.agarron.simpleast_core.parser.Parser;
-import com.agarron.simpleast_core.parser.Rule;
-import com.agarron.simpleast_core.renderer.SpannableRenderableNode;
-import com.agarron.simpleast_core.renderer.SpannableRenderer;
+import com.discord.simpleast.core.parser.Parser;
+import com.discord.simpleast.core.parser.Rule;
+import com.discord.simpleast.core.renderer.SpannableRenderableNode;
+import com.discord.simpleast.core.renderer.SpannableRenderer;
 
 import java.util.Collection;
 

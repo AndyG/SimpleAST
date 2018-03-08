@@ -1,10 +1,10 @@
-package com.agarron.simpleast_core.utils;
+package com.discord.simpleast.core.utils;
 
 import android.text.style.CharacterStyle;
 
-import com.agarron.simpleast_core.node.Node;
-import com.agarron.simpleast_core.node.StyleNode;
-import com.agarron.simpleast_core.node.TextNode;
+import com.discord.simpleast.core.node.Node;
+import com.discord.simpleast.core.node.StyleNode;
+import com.discord.simpleast.core.node.TextNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;

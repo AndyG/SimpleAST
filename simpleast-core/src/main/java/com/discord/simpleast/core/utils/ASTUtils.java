@@ -1,6 +1,6 @@
-package com.agarron.simpleast_core.utils;
+package com.discord.simpleast.core.utils;
 
-import com.agarron.simpleast_core.node.Node;
+import com.discord.simpleast.core.node.Node;
 
 import java.util.Collection;
 

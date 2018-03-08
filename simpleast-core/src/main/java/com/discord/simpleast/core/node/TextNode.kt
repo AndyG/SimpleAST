@@ -1,10 +1,10 @@
-package com.agarron.simpleast_core.node
+package com.discord.simpleast.core.node
 
 
 import android.content.Context
 import android.text.SpannableStringBuilder
 
-import com.agarron.simpleast_core.renderer.SpannableRenderableNode
+import com.discord.simpleast.core.renderer.SpannableRenderableNode
 
 /**
  * Node representing simple text.

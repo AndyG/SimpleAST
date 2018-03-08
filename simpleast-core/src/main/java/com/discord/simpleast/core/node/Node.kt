@@ -1,4 +1,4 @@
-package com.agarron.simpleast_core.node
+package com.discord.simpleast.core.node
 
 /**
  * Represents a single node in an Abstract Syntax Tree. It can (but does not need to) have children.

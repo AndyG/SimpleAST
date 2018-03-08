@@ -1,16 +1,16 @@
-package com.agarron.simpleast_core.simple
+package com.discord.simpleast.core.simple
 
 import android.graphics.Typeface
 import android.text.style.CharacterStyle
 import android.text.style.StrikethroughSpan
 import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
-import com.agarron.simpleast_core.node.StyleNode
-import com.agarron.simpleast_core.node.TextNode
-import com.agarron.simpleast_core.parser.ParseSpec
-import com.agarron.simpleast_core.parser.Parser
-import com.agarron.simpleast_core.parser.Rule
-import com.agarron.simpleast_core.renderer.SpannableRenderableNode
+import com.discord.simpleast.core.node.StyleNode
+import com.discord.simpleast.core.node.TextNode
+import com.discord.simpleast.core.parser.ParseSpec
+import com.discord.simpleast.core.parser.Parser
+import com.discord.simpleast.core.parser.Rule
+import com.discord.simpleast.core.renderer.SpannableRenderableNode
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern

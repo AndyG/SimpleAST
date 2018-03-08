@@ -1,7 +1,7 @@
-package com.agarron.simpleast_core.parser
+package com.discord.simpleast.core.parser
 
 import android.util.Log
-import com.agarron.simpleast_core.node.Node
+import com.discord.simpleast.core.node.Node
 import java.util.*
 
 class Parser<T : Node> @JvmOverloads constructor(private val enableDebugging: Boolean = false) {

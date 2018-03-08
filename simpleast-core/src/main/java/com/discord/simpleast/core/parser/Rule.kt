@@ -1,6 +1,6 @@
-package com.agarron.simpleast_core.parser
+package com.discord.simpleast.core.parser
 
-import com.agarron.simpleast_core.node.Node
+import com.discord.simpleast.core.node.Node
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 

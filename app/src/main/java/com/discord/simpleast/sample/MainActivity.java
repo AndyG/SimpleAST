@@ -1,4 +1,4 @@
-package com.agarron.simpleast;
+package com.discord.simpleast.sample;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,16 +9,17 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.agarron.simpleast_core.node.Node;
-import com.agarron.simpleast_core.node.StyleNode;
-import com.agarron.simpleast_core.node.TextNode;
-import com.agarron.simpleast_core.parser.ParseSpec;
-import com.agarron.simpleast_core.parser.Parser;
-import com.agarron.simpleast_core.parser.Rule;
-import com.agarron.simpleast_core.renderer.SpannableRenderableNode;
-import com.agarron.simpleast_core.renderer.SpannableRenderer;
-import com.agarron.simpleast_core.simple.SimpleMarkdownRules;
-import com.agarron.simpleast_core.simple.SimpleRenderer;
+import com.agarron.simpleast.R;
+import com.discord.simpleast.core.node.Node;
+import com.discord.simpleast.core.node.StyleNode;
+import com.discord.simpleast.core.node.TextNode;
+import com.discord.simpleast.core.parser.ParseSpec;
+import com.discord.simpleast.core.parser.Parser;
+import com.discord.simpleast.core.parser.Rule;
+import com.discord.simpleast.core.renderer.SpannableRenderableNode;
+import com.discord.simpleast.core.renderer.SpannableRenderer;
+import com.discord.simpleast.core.simple.SimpleMarkdownRules;
+import com.discord.simpleast.core.simple.SimpleRenderer;
 
 import java.util.Collection;
 import java.util.Collections;

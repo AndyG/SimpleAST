@@ -1,11 +1,11 @@
-package com.agarron.simpleast_core.node
+package com.discord.simpleast.core.node
 
 import android.content.Context
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.CharacterStyle
 
-import com.agarron.simpleast_core.renderer.SpannableRenderableNode
+import com.discord.simpleast.core.renderer.SpannableRenderableNode
 
 class StyleNode(val styles: List<CharacterStyle>) : SpannableRenderableNode() {
 

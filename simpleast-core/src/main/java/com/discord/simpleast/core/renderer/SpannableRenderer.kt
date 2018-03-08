@@ -1,4 +1,4 @@
-package com.agarron.simpleast_core.renderer
+package com.discord.simpleast.core.renderer
 
 import android.content.Context
 import android.text.SpannableStringBuilder
