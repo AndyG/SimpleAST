@@ -14,12 +14,12 @@ import java.util.Collection;
 
 public class SimpleRenderer {
 
-  public static void renderBasicMarkdown(final TextView textView, @StringRes final int sourceResId) {
+  public static void renderBasicMarkdown(@StringRes final int sourceResId, final TextView textView) {
     final CharSequence source = textView.getContext().getString(sourceResId);
-    renderBasicMarkdown(textView, source);
+    renderBasicMarkdown(source, textView);
   }
 
-  public static void renderBasicMarkdown(final TextView textView, final CharSequence source) {
+  public static void renderBasicMarkdown(final CharSequence source, final TextView textView) {
     textView.setText(renderBasicMarkdown(source, textView.getContext()));
   }
 

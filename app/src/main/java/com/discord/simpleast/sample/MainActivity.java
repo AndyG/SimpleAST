@@ -2,7 +2,6 @@ package com.discord.simpleast.sample;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.SpannableStringBuilder;
 import android.text.style.CharacterStyle;
 import android.util.Log;
 import android.view.View;
@@ -17,11 +16,9 @@ import com.discord.simpleast.core.parser.ParseSpec;
 import com.discord.simpleast.core.parser.Parser;
 import com.discord.simpleast.core.parser.Rule;
 import com.discord.simpleast.core.renderer.SpannableRenderableNode;
-import com.discord.simpleast.core.renderer.SpannableRenderer;
 import com.discord.simpleast.core.simple.SimpleMarkdownRules;
 import com.discord.simpleast.core.simple.SimpleRenderer;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -61,10 +58,11 @@ public class MainActivity extends AppCompatActivity {
     findViewById(R.id.test_btn).setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        final Parser<SpannableRenderableNode> parser = new Parser<>(true);
-        parser.addRules(SimpleMarkdownRules.createSimpleMarkdownRules());
-        final Collection<SpannableRenderableNode> nodes = parser.parse(input.getText());
-        resultText.setText(SpannableRenderer.render(new SpannableStringBuilder(), nodes, null));
+//        final Parser<SpannableRenderableNode> parser = new Parser<>(true);
+//        parser.addRules(SimpleMarkdownRules.createSimpleMarkdownRules());
+//        final Collection<SpannableRenderableNode> nodes = parser.parse(input.getText());
+//        resultText.setText(SpannableRenderer.render(new SpannableStringBuilder(), nodes, null));
+        SimpleRenderer.renderBasicMarkdown(input.getText(), resultText);
       }
     });
   }
@@ -125,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
     final String text = createTestText();
 
     for (int i = 0; i < times; i++) {
-      SimpleRenderer.renderBasicMarkdown(resultText, text);
+      SimpleRenderer.renderBasicMarkdown(text, resultText);
     }
   }
 }
