@@ -14,7 +14,7 @@ ext {
     siteUrl = 'https://github.com/angarron/SimpleAST'
     gitUrl = 'https://github.com/angarron/SimpleAST.git'
 
-    libraryVersion = '1.0.0-rc1'
+    libraryVersion = '1.0.0-rc2'
 
     developerId = 'angarron'
     developerName = 'Anderson Garron'
