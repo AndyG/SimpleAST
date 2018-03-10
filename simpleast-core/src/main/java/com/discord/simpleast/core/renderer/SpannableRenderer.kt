@@ -1,6 +1,5 @@
 package com.discord.simpleast.core.renderer
 
-import android.content.Context
 import android.text.SpannableStringBuilder
 
 /**
@@ -9,9 +8,9 @@ import android.text.SpannableStringBuilder
 object SpannableRenderer {
 
   @JvmStatic
-  fun <T: SpannableStringBuilder> render(builder: T, ast: Collection<SpannableRenderableNode>, context: Context? = null): T {
+  fun <T: SpannableStringBuilder, R> render(builder: T, ast: Collection<SpannableRenderableNode<R>>, renderContext: R? = null): T {
     for (node in ast) {
-      node.render(builder, context)
+      node.render(builder, renderContext)
     }
 
     return builder
