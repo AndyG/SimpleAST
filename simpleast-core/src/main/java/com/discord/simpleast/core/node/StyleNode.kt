@@ -7,7 +7,7 @@ import com.discord.simpleast.core.renderer.SpannableRenderableNode
 
 open class StyleNode<in R>(val styles: List<CharacterStyle>) : SpannableRenderableNode<R>() {
 
-  override fun render(builder: SpannableStringBuilder, renderContext: R?) {
+  override fun render(builder: SpannableStringBuilder, renderContext: R) {
     val startIndex = builder.length
 
     // First render all child nodes, as these are the nodes we want to apply the styles to.

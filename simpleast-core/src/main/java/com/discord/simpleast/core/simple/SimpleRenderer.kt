@@ -20,10 +20,10 @@ object SimpleRenderer {
   }
 
   fun renderBasicMarkdown(source: CharSequence): SpannableStringBuilder {
-    return render(source, SimpleMarkdownRules.createSimpleMarkdownRules<Any>(), null)
+    return render(source, SimpleMarkdownRules.createSimpleMarkdownRules<Any?>(), null)
   }
 
-  fun <R> render(source: CharSequence, rules: Collection<Rule<SpannableRenderableNode<R>>>, renderContext: R?): SpannableStringBuilder {
+  fun <R> render(source: CharSequence, rules: Collection<Rule<SpannableRenderableNode<R>>>, renderContext: R): SpannableStringBuilder {
     val parser = Parser<SpannableRenderableNode<R>>()
     for (rule in rules) {
       parser.addRule(rule)

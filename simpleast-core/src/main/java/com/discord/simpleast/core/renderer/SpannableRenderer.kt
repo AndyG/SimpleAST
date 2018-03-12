@@ -8,7 +8,7 @@ import android.text.SpannableStringBuilder
 object SpannableRenderer {
 
   @JvmStatic
-  fun <T: SpannableStringBuilder, R> render(builder: T, ast: Collection<SpannableRenderableNode<R>>, renderContext: R? = null): T {
+  fun <T: SpannableStringBuilder, R> render(builder: T, ast: Collection<SpannableRenderableNode<R>>, renderContext: R): T {
     for (node in ast) {
       node.render(builder, renderContext)
     }
