@@ -21,7 +21,7 @@ open class Parser<T : Node> @JvmOverloads constructor(private val enableDebuggin
   }
 
   @JvmOverloads
-  fun parse(source: CharSequence?, isNested: Boolean = false): List<T> {
+  fun parse(source: CharSequence?, isNested: Boolean = false): MutableList<T> {
     val remainingParses = Stack<ParseSpec<out T>>()
     val topLevelNodes = ArrayList<T>()
 
