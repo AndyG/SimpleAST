@@ -5,7 +5,7 @@ import android.text.Spanned
 import android.text.style.CharacterStyle
 import com.discord.simpleast.core.renderer.SpannableRenderableNode
 
-class StyleNode<in R>(val styles: List<CharacterStyle>) : SpannableRenderableNode<R>() {
+open class StyleNode<in R>(val styles: List<CharacterStyle>) : SpannableRenderableNode<R>() {
 
   override fun render(builder: SpannableStringBuilder, renderContext: R?) {
     val startIndex = builder.length

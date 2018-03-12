@@ -7,7 +7,7 @@ import com.discord.simpleast.core.renderer.SpannableRenderableNode
 /**
  * Node representing simple text.
  */
-class TextNode<in R> (val content: String) : SpannableRenderableNode<R>() {
+open class TextNode<in R> (val content: String) : SpannableRenderableNode<R>() {
   override fun render(builder: SpannableStringBuilder, renderContext: R?) {
     builder.append(content)
   }

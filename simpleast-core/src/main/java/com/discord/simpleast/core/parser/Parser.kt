@@ -4,7 +4,7 @@ import android.util.Log
 import com.discord.simpleast.core.node.Node
 import java.util.*
 
-class Parser<T : Node> @JvmOverloads constructor(private val enableDebugging: Boolean = false) {
+open class Parser<T : Node> @JvmOverloads constructor(private val enableDebugging: Boolean = false) {
 
   private val rules = ArrayList<Rule<T>>()
 
