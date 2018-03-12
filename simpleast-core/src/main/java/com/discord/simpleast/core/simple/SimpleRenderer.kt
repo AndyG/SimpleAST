@@ -10,19 +10,23 @@ import com.discord.simpleast.core.renderer.SpannableRenderer
 
 object SimpleRenderer {
 
+  @JvmStatic
   fun renderBasicMarkdown(@StringRes sourceResId: Int, textView: TextView) {
     val source = textView.context.getString(sourceResId)
     renderBasicMarkdown(source, textView)
   }
 
+  @JvmStatic
   fun renderBasicMarkdown(source: CharSequence, textView: TextView) {
     textView.text = renderBasicMarkdown(source)
   }
 
+  @JvmStatic
   fun renderBasicMarkdown(source: CharSequence): SpannableStringBuilder {
     return render(source, SimpleMarkdownRules.createSimpleMarkdownRules<Any?>(), null)
   }
 
+  @JvmStatic
   fun <R> render(source: CharSequence, rules: Collection<Rule<SpannableRenderableNode<R>>>, renderContext: R): SpannableStringBuilder {
     val parser = Parser<SpannableRenderableNode<R>>()
     for (rule in rules) {
