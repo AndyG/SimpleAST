@@ -23,7 +23,7 @@ object SimpleRenderer {
 
   @JvmStatic
   fun renderBasicMarkdown(source: CharSequence): SpannableStringBuilder {
-    return render(source, SimpleMarkdownRules.createSimpleMarkdownRules<Any?>(), null)
+    return render(source, SimpleMarkdownRules.createSimpleMarkdownRules(), null)
   }
 
   @JvmStatic

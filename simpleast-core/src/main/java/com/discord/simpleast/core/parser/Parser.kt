@@ -6,14 +6,14 @@ import java.util.*
 
 open class Parser<R, T : Node<R>> @JvmOverloads constructor(private val enableDebugging: Boolean = false) {
 
-  private val rules = ArrayList<Rule<R, T>>()
+  private val rules = ArrayList<Rule<R, out T>>()
 
-  fun addRule(rule: Rule<R, T>): Parser<R, T> {
+  fun <C : T> addRule(rule: Rule<R, C>): Parser<R, T> {
     rules.add(rule)
     return this
   }
 
-  fun addRules(rules: Collection<Rule<R, T>>): Parser<R, T> {
+  fun <C: T> addRules(rules: Collection<Rule<R, C>>): Parser<R, T> {
     for (rule in rules) {
       addRule(rule)
     }

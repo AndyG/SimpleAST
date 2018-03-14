@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
     val parser = Parser<TestRenderContext, Node<TestRenderContext>>()
 
     parser.addRule(object : Rule<TestRenderContext, Node<TestRenderContext>>(Pattern.compile("^<replacement>")) {
-      override fun parse(matcher: Matcher, parser: Parser<TestRenderContext, Node<TestRenderContext>>, isNested: Boolean): ParseSpec<TestRenderContext, Node<TestRenderContext>> {
+      override fun parse(matcher: Matcher, parser: Parser<TestRenderContext, in Node<TestRenderContext>>, isNested: Boolean): ParseSpec<TestRenderContext, Node<TestRenderContext>> {
         return ParseSpec.createTerminal(TextNodeWithContext())
       }
     })
@@ -106,5 +106,17 @@ ValueError: unknown url type: '/yts/jsbin/player-en_US-vflkk7pUE/base.js'
       builder.append(renderContext.string)
     }
   }
+
+  class UserNode(val userId: Int) : Node<Any?>()
+
+  class UserMentionRule : Rule<Any?, UserNode>(Pattern.compile("^<(\\d+)>")) {
+    override fun parse(matcher: Matcher, parser: Parser<Any?, in UserNode>, isNested: Boolean): ParseSpec<Any?, UserNode> {
+      return ParseSpec.createTerminal(UserNode(matcher.group(1).toInt()))
+    }
+  }
+
+  val parserTest = Parser<Any?, Node<Any?>>()
+      .addRule(UserMentionRule())
+      .addRules(SimpleMarkdownRules.createSimpleMarkdownRules())
 }
 
