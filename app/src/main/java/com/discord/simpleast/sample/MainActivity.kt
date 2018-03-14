@@ -48,7 +48,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     findViewById(R.id.test_btn).setOnClickListener {
-      testParseWithContext(input.text, resultText)
+      val parserTest2 = Parser<Any?, Node<Any?>>()
+          .addRule(UserMentionRule())
+          .addRules(SimpleMarkdownRules.createSimpleMarkdownRules())
+
+      val ast = parserTest2.parse(input.text)
+      resultText.text = SpannableRenderer.render(SpannableStringBuilder(), ast, null)
     }
   }
 
