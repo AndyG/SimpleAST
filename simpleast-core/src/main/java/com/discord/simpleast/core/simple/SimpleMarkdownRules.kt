@@ -103,7 +103,7 @@ object SimpleMarkdownRules {
   }
 
   @JvmOverloads @JvmStatic
-  fun <R> createSimpleMarkdownRules(includeTextRule: Boolean = true): List<Rule<SpannableRenderableNode<R>>> {
+  fun <R> createSimpleMarkdownRules(includeTextRule: Boolean = true): MutableList<Rule<SpannableRenderableNode<R>>> {
     val rules = ArrayList<Rule<SpannableRenderableNode<R>>>()
     rules.add(createEscapeRule())
     rules.add(createBoldRule())
