@@ -64,7 +64,7 @@ object SimpleMarkdownRules {
 
   fun <R> createTextRule(): Rule<R, Node<R>> {
     return object : Rule<R, Node<R>>(PATTERN_TEXT, true) {
-      override fun parse(matcher: Matcher, parser: Parser<R, Node<R>>, isNested: Boolean): ParseSpec<R, Node<R>> {
+      override fun parse(matcher: Matcher, parser: Parser<R, in Node<R>>, isNested: Boolean): ParseSpec<R, Node<R>> {
         val node = TextNode<R>(matcher.group())
         return ParseSpec.createTerminal(node)
       }
@@ -73,7 +73,7 @@ object SimpleMarkdownRules {
 
   fun <R> createEscapeRule(): Rule<R, Node<R>> {
     return object : Rule<R, Node<R>>(PATTERN_ESCAPE, false) {
-      override fun parse(matcher: Matcher, parser: Parser<R, Node<R>>, isNested: Boolean): ParseSpec<R, Node<R>> {
+      override fun parse(matcher: Matcher, parser: Parser<R, in Node<R>>, isNested: Boolean): ParseSpec<R, Node<R>> {
         return ParseSpec.createTerminal(TextNode(matcher.group(1)))
       }
     }
@@ -81,7 +81,7 @@ object SimpleMarkdownRules {
 
   fun <R> createItalicsRule(): Rule<R, Node<R>> {
     return object : Rule<R, Node<R>>(PATTERN_ITALICS, false) {
-      override fun parse(matcher: Matcher, parser: Parser<R, Node<R>>, isNested: Boolean): ParseSpec<R, Node<R>> {
+      override fun parse(matcher: Matcher, parser: Parser<R, in Node<R>>, isNested: Boolean): ParseSpec<R, Node<R>> {
         val startIndex: Int
         val endIndex: Int
         val asteriskMatch = matcher.group(2)
@@ -118,7 +118,7 @@ object SimpleMarkdownRules {
 
   private fun <R> createSimpleStyleRule(pattern: Pattern, styleFactory: StyleFactory): Rule<R, Node<R>> {
     return object : Rule<R, Node<R>>(pattern, false) {
-      override fun parse(matcher: Matcher, parser: Parser<R, Node<R>>, isNested: Boolean): ParseSpec<R, Node<R>> {
+      override fun parse(matcher: Matcher, parser: Parser<R, in Node<R>>, isNested: Boolean): ParseSpec<R, Node<R>> {
         val node = StyleNode<R>(listOf(styleFactory.get()))
         return ParseSpec.createNonterminal(node, matcher.start(1), matcher.end(1))
       }
