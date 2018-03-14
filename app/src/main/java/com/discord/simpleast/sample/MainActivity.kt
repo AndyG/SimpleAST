@@ -102,7 +102,7 @@ ValueError: unknown url type: '/yts/jsbin/player-en_US-vflkk7pUE/base.js'
   }
 
   private class TextNodeWithContext : SpannableRenderableNode<TestRenderContext>() {
-    override fun render(builder: SpannableStringBuilder, renderContext: TestRenderContext?) {
+    override fun render(builder: SpannableStringBuilder, renderContext: TestRenderContext) {
       builder.append(renderContext?.string)
     }
   }
