@@ -7,10 +7,10 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
 import com.agarron.simpleast.R
+import com.discord.simpleast.core.node.Node
 import com.discord.simpleast.core.parser.ParseSpec
 import com.discord.simpleast.core.parser.Parser
 import com.discord.simpleast.core.parser.Rule
-import com.discord.simpleast.core.renderer.SpannableRenderableNode
 import com.discord.simpleast.core.renderer.SpannableRenderer
 import com.discord.simpleast.core.simple.SimpleMarkdownRules
 import com.discord.simpleast.core.simple.SimpleRenderer
@@ -53,10 +53,10 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun testParseWithContext(source: CharSequence?, resultText: TextView) {
-    val parser = Parser<SpannableRenderableNode<TestRenderContext>>()
+    val parser = Parser<TestRenderContext, Node<TestRenderContext>>()
 
-    parser.addRule(object : Rule<SpannableRenderableNode<TestRenderContext>>(Pattern.compile("^<replacement>")) {
-      override fun parse(matcher: Matcher, parser: Parser<SpannableRenderableNode<TestRenderContext>>, isNested: Boolean): ParseSpec<out SpannableRenderableNode<TestRenderContext>> {
+    parser.addRule(object : Rule<TestRenderContext, Node<TestRenderContext>>(Pattern.compile("^<replacement>")) {
+      override fun parse(matcher: Matcher, parser: Parser<TestRenderContext, Node<TestRenderContext>>, isNested: Boolean): ParseSpec<TestRenderContext, Node<TestRenderContext>> {
         return ParseSpec.createTerminal(TextNodeWithContext())
       }
     })
@@ -101,9 +101,9 @@ ValueError: unknown url type: '/yts/jsbin/player-en_US-vflkk7pUE/base.js'
     }
   }
 
-  private class TextNodeWithContext : SpannableRenderableNode<TestRenderContext>() {
+  private class TextNodeWithContext : Node<TestRenderContext>() {
     override fun render(builder: SpannableStringBuilder, renderContext: TestRenderContext) {
-      builder.append(renderContext?.string)
+      builder.append(renderContext.string)
     }
   }
 }

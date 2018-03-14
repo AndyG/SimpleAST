@@ -4,16 +4,16 @@ import android.util.Log
 import com.discord.simpleast.core.node.Node
 import java.util.*
 
-open class Parser<T : Node> @JvmOverloads constructor(private val enableDebugging: Boolean = false) {
+open class Parser<R, T : Node<R>> @JvmOverloads constructor(private val enableDebugging: Boolean = false) {
 
-  private val rules = ArrayList<Rule<T>>()
+  private val rules = ArrayList<Rule<R, T>>()
 
-  fun addRule(rule: Rule<T>): Parser<T> {
+  fun addRule(rule: Rule<R, T>): Parser<R, T> {
     rules.add(rule)
     return this
   }
 
-  fun addRules(rules: Collection<Rule<T>>): Parser<T> {
+  fun addRules(rules: Collection<Rule<R, T>>): Parser<R, T> {
     for (rule in rules) {
       addRule(rule)
     }
@@ -22,7 +22,7 @@ open class Parser<T : Node> @JvmOverloads constructor(private val enableDebuggin
 
   @JvmOverloads
   fun parse(source: CharSequence?, isNested: Boolean = false): MutableList<T> {
-    val remainingParses = Stack<ParseSpec<out T>>()
+    val remainingParses = Stack<ParseSpec<R, out T>>()
     val topLevelNodes = ArrayList<T>()
 
     if (source != null && !source.isEmpty()) {
@@ -89,13 +89,13 @@ open class Parser<T : Node> @JvmOverloads constructor(private val enableDebuggin
     return topLevelNodes
   }
 
-  private fun logMatch(rule: Rule<*>, source: CharSequence) {
+  private fun <R, T: Node<R>> logMatch(rule: Rule<R, T>, source: CharSequence) {
     if (enableDebugging) {
       Log.i(TAG, "MATCH: with rule with pattern: " + rule.matcher.pattern().toString() + " to source: " + source)
     }
   }
 
-  private fun logMiss(rule: Rule<*>, source: CharSequence) {
+  private fun <R, T: Node<R>> logMiss(rule: Rule<R, T>, source: CharSequence) {
     if (enableDebugging) {
       Log.i(TAG, "MISS: with rule with pattern: " + rule.matcher.pattern().toString() + " to source: " + source)
     }

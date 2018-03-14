@@ -8,7 +8,6 @@ import com.discord.simpleast.core.node.Node;
 import com.discord.simpleast.core.node.StyleNode;
 import com.discord.simpleast.core.node.TextNode;
 import com.discord.simpleast.core.parser.Parser;
-import com.discord.simpleast.core.renderer.SpannableRenderableNode;
 import com.discord.simpleast.core.simple.SimpleMarkdownRules;
 import com.discord.simpleast.core.utils.TreeMatcher;
 

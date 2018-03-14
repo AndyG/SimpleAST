@@ -14,7 +14,7 @@ import com.discord.simpleast.core.node.Node
  * For terminal subtrees, the root will simply be added to the tree and no additional parsing will
  * take place on the text.
  */
-class ParseSpec<T : Node> {
+class ParseSpec<R, T : Node<R>> {
   val root: T?
   val isTerminal: Boolean
   var startIndex: Int = 0
@@ -40,12 +40,12 @@ class ParseSpec<T : Node> {
   companion object {
 
     @JvmStatic
-    fun <T : Node> createNonterminal(node: T?, startIndex: Int, endIndex: Int): ParseSpec<T> {
+    fun <R, T : Node<R>> createNonterminal(node: T?, startIndex: Int, endIndex: Int): ParseSpec<R, T> {
       return ParseSpec(node, startIndex, endIndex)
     }
 
     @JvmStatic
-    fun <T : Node> createTerminal(node: T?): ParseSpec<T> {
+    fun <R, T : Node<R>> createTerminal(node: T?): ParseSpec<R, T> {
       return ParseSpec(node)
     }
   }

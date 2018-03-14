@@ -5,12 +5,12 @@ import android.text.style.CharacterStyle
 import android.text.style.StrikethroughSpan
 import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
+import com.discord.simpleast.core.node.Node
 import com.discord.simpleast.core.node.StyleNode
 import com.discord.simpleast.core.node.TextNode
 import com.discord.simpleast.core.parser.ParseSpec
 import com.discord.simpleast.core.parser.Parser
 import com.discord.simpleast.core.parser.Rule
-import com.discord.simpleast.core.renderer.SpannableRenderableNode
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -38,7 +38,7 @@ object SimpleMarkdownRules {
           ")\\*(?!\\*)"
   )
 
-  fun <R> createBoldRule(): Rule<SpannableRenderableNode<R>> {
+  fun <R> createBoldRule(): Rule<R, Node<R>> {
     return createSimpleStyleRule(PATTERN_BOLD, object : StyleFactory {
       override fun get(): CharacterStyle {
         return StyleSpan(Typeface.BOLD)
@@ -46,7 +46,7 @@ object SimpleMarkdownRules {
     })
   }
 
-  fun <R> createUnderlineRule(): Rule<SpannableRenderableNode<R>> {
+  fun <R> createUnderlineRule(): Rule<R, Node<R>> {
     return createSimpleStyleRule(PATTERN_UNDERLINE, object : StyleFactory {
       override fun get(): CharacterStyle {
         return UnderlineSpan()
@@ -54,7 +54,7 @@ object SimpleMarkdownRules {
     })
   }
 
-  fun <R> createStrikethruRule(): Rule<SpannableRenderableNode<R>> {
+  fun <R> createStrikethruRule(): Rule<R, Node<R>> {
     return createSimpleStyleRule(PATTERN_STRIKETHRU, object : StyleFactory {
       override fun get(): CharacterStyle {
         return StrikethroughSpan()
@@ -62,26 +62,26 @@ object SimpleMarkdownRules {
     })
   }
 
-  fun <R> createTextRule(): Rule<SpannableRenderableNode<R>> {
-    return object : Rule<SpannableRenderableNode<R>>(PATTERN_TEXT, true) {
-      override fun parse(matcher: Matcher, parser: Parser<SpannableRenderableNode<R>>, isNested: Boolean): ParseSpec<SpannableRenderableNode<R>> {
+  fun <R> createTextRule(): Rule<R, Node<R>> {
+    return object : Rule<R, Node<R>>(PATTERN_TEXT, true) {
+      override fun parse(matcher: Matcher, parser: Parser<R, Node<R>>, isNested: Boolean): ParseSpec<R, Node<R>> {
         val node = TextNode<R>(matcher.group())
         return ParseSpec.createTerminal(node)
       }
     }
   }
 
-  fun <R> createEscapeRule(): Rule<SpannableRenderableNode<R>> {
-    return object : Rule<SpannableRenderableNode<R>>(PATTERN_ESCAPE, false) {
-      override fun parse(matcher: Matcher, parser: Parser<SpannableRenderableNode<R>>, isNested: Boolean): ParseSpec<out SpannableRenderableNode<R>> {
+  fun <R> createEscapeRule(): Rule<R, Node<R>> {
+    return object : Rule<R, Node<R>>(PATTERN_ESCAPE, false) {
+      override fun parse(matcher: Matcher, parser: Parser<R, Node<R>>, isNested: Boolean): ParseSpec<R, Node<R>> {
         return ParseSpec.createTerminal(TextNode(matcher.group(1)))
       }
     }
   }
 
-  fun <R> createItalicsRule(): Rule<SpannableRenderableNode<R>> {
-    return object : Rule<SpannableRenderableNode<R>>(PATTERN_ITALICS, false) {
-      override fun parse(matcher: Matcher, parser: Parser<SpannableRenderableNode<R>>, isNested: Boolean): ParseSpec<SpannableRenderableNode<R>> {
+  fun <R> createItalicsRule(): Rule<R, Node<R>> {
+    return object : Rule<R, Node<R>>(PATTERN_ITALICS, false) {
+      override fun parse(matcher: Matcher, parser: Parser<R, Node<R>>, isNested: Boolean): ParseSpec<R, Node<R>> {
         val startIndex: Int
         val endIndex: Int
         val asteriskMatch = matcher.group(2)
@@ -103,8 +103,8 @@ object SimpleMarkdownRules {
   }
 
   @JvmOverloads @JvmStatic
-  fun <R> createSimpleMarkdownRules(includeTextRule: Boolean = true): MutableList<Rule<SpannableRenderableNode<R>>> {
-    val rules = ArrayList<Rule<SpannableRenderableNode<R>>>()
+  fun <R> createSimpleMarkdownRules(includeTextRule: Boolean = true): MutableList<Rule<R, Node<R>>> {
+    val rules = ArrayList<Rule<R, Node<R>>>()
     rules.add(createEscapeRule())
     rules.add(createBoldRule())
     rules.add(createUnderlineRule())
@@ -116,9 +116,9 @@ object SimpleMarkdownRules {
     return rules
   }
 
-  private fun <R> createSimpleStyleRule(pattern: Pattern, styleFactory: StyleFactory): Rule<SpannableRenderableNode<R>> {
-    return object : Rule<SpannableRenderableNode<R>>(pattern, false) {
-      override fun parse(matcher: Matcher, parser: Parser<SpannableRenderableNode<R>>, isNested: Boolean): ParseSpec<SpannableRenderableNode<R>> {
+  private fun <R> createSimpleStyleRule(pattern: Pattern, styleFactory: StyleFactory): Rule<R, Node<R>> {
+    return object : Rule<R, Node<R>>(pattern, false) {
+      override fun parse(matcher: Matcher, parser: Parser<R, Node<R>>, isNested: Boolean): ParseSpec<R, Node<R>> {
         val node = StyleNode<R>(listOf(styleFactory.get()))
         return ParseSpec.createNonterminal(node, matcher.start(1), matcher.end(1))
       }

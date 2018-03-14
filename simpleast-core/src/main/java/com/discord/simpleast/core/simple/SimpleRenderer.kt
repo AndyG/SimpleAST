@@ -3,9 +3,9 @@ package com.discord.simpleast.core.simple
 import android.support.annotation.StringRes
 import android.text.SpannableStringBuilder
 import android.widget.TextView
+import com.discord.simpleast.core.node.Node
 import com.discord.simpleast.core.parser.Parser
 import com.discord.simpleast.core.parser.Rule
-import com.discord.simpleast.core.renderer.SpannableRenderableNode
 import com.discord.simpleast.core.renderer.SpannableRenderer
 
 object SimpleRenderer {
@@ -27,8 +27,8 @@ object SimpleRenderer {
   }
 
   @JvmStatic
-  fun <R> render(source: CharSequence, rules: Collection<Rule<SpannableRenderableNode<R>>>, renderContext: R): SpannableStringBuilder {
-    val parser = Parser<SpannableRenderableNode<R>>()
+  fun <R> render(source: CharSequence, rules: Collection<Rule<R, Node<R>>>, renderContext: R): SpannableStringBuilder {
+    val parser = Parser<R, Node<R>>()
     for (rule in rules) {
       parser.addRule(rule)
     }
