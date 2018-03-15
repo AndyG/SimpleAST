@@ -129,7 +129,7 @@ resultText.text = SimpleRenderer.render(
 )
 ```
 
-Note that we only provide `{1234 : ""}` as our map of usernames. As such, we will render the following:
+Note that we only provide `{1234 : "CoolDude1234"}` as our map of usernames. As such, we will render the following:
 
 | Input  | Output |
 | ------------- | ------------- |
