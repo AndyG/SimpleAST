@@ -5,7 +5,7 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
 group = 'com.discord'
-version = 'test11'
+version = 'test12'
 
 def pomConfig = {
     licenses {
@@ -115,6 +115,13 @@ bintray {
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/angarron/SimpleAST.git'
         publicDownloadNumbers = true
+
+        version {
+            gpg {
+                sign = true
+                passphrase = discord_bintray_gpg_passphrase
+            }
+        }
     }
 }
 
