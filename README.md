@@ -4,7 +4,9 @@ SimpleAST is a Kotlin/Java library designed to parse text into Abstract Syntax T
 
 It strives for extensibility and robustness. How text is parsed into nodes in a tree is determined by a set of rules, provided by the client. This makes detecting and rendering your own custom entities in text a breeze.
 
-Besides basic markdown, SimpleAST is what the Discord Android app uses to detect and render various entities in text. For example:
+Besides basic markdown, SimpleAST is what the Discord Android app uses to detect and render various entities in text.
+
+For example:
 
 "<@123456789> has \*\*joined the server\*\*." becomes "@AndyG has **joined the server**." Read more here: (link to blog post)
 
