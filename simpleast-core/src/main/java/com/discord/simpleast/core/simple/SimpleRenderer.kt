@@ -6,7 +6,6 @@ import android.widget.TextView
 import com.discord.simpleast.core.node.Node
 import com.discord.simpleast.core.parser.Parser
 import com.discord.simpleast.core.parser.Rule
-import com.discord.simpleast.core.renderer.SpannableRenderer
 
 object SimpleRenderer {
 
@@ -33,6 +32,20 @@ object SimpleRenderer {
       parser.addRule(rule)
     }
 
-    return SpannableRenderer.render(SpannableStringBuilder(), parser.parse(source, false), renderContext)
+    return render(SpannableStringBuilder(), parser.parse(source, false), renderContext)
+  }
+
+  @JvmStatic
+  fun <R> render(source: CharSequence, parser: Parser<R, Node<R>>, renderContext: R): SpannableStringBuilder {
+    return render(SpannableStringBuilder(), parser.parse(source, false), renderContext)
+  }
+
+  @JvmStatic
+  fun <T: SpannableStringBuilder, R> render(builder: T, ast: Collection<Node<R>>, renderContext: R): T {
+    for (node in ast) {
+      node.render(builder, renderContext)
+    }
+
+    return builder
   }
 }

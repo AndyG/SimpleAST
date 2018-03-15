@@ -8,10 +8,10 @@ import android.widget.EditText
 import android.widget.TextView
 import com.agarron.simpleast.R
 import com.discord.simpleast.core.node.Node
+import com.discord.simpleast.core.node.TextNode
 import com.discord.simpleast.core.parser.ParseSpec
 import com.discord.simpleast.core.parser.Parser
 import com.discord.simpleast.core.parser.Rule
-import com.discord.simpleast.core.renderer.SpannableRenderer
 import com.discord.simpleast.core.simple.SimpleMarkdownRules
 import com.discord.simpleast.core.simple.SimpleRenderer
 import java.util.regex.Matcher
@@ -48,31 +48,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     findViewById(R.id.test_btn).setOnClickListener {
-      val parserTest2 = Parser<Any?, Node<Any?>>()
-          .addRule(UserMentionRule())
-          .addRules(SimpleMarkdownRules.createSimpleMarkdownRules())
+val parser = Parser<RenderContext, Node<RenderContext>>()
+    .addRule(UserMentionRule())
+    .addRules(SimpleMarkdownRules.createSimpleMarkdownRules())
 
-      val ast = parserTest2.parse(input.text)
-      resultText.text = SpannableRenderer.render(SpannableStringBuilder(), ast, null)
+resultText.text = SimpleRenderer.render(
+    source = input.text,
+    parser = parser,
+    renderContext = RenderContext(mapOf(1234 to "User1234"))
+)
     }
   }
-
-  private fun testParseWithContext(source: CharSequence?, resultText: TextView) {
-    val parser = Parser<TestRenderContext, Node<TestRenderContext>>()
-
-    parser.addRule(object : Rule<TestRenderContext, Node<TestRenderContext>>(Pattern.compile("^<replacement>")) {
-      override fun parse(matcher: Matcher, parser: Parser<TestRenderContext, in Node<TestRenderContext>>, isNested: Boolean): ParseSpec<TestRenderContext, Node<TestRenderContext>> {
-        return ParseSpec.createTerminal(TextNodeWithContext())
-      }
-    })
-
-    parser.addRules(SimpleMarkdownRules.createSimpleMarkdownRules())
-
-    val ast = parser.parse(source)
-    resultText.text = SpannableRenderer.render(SpannableStringBuilder(), ast, TestRenderContext("poooooooop"))
-  }
-
-  data class TestRenderContext(val string: String)
 
   private fun createTestText() = """[0;31mERROR:[0m Signature extraction failed: Traceback (most recent call last):
   File "/usr/local/lib/python3.5/dist-packages/youtube_dl/extractor/youtube.py", line 1011, in _decrypt_signature
@@ -106,22 +92,23 @@ ValueError: unknown url type: '/yts/jsbin/player-en_US-vflkk7pUE/base.js'
     }
   }
 
-  private class TextNodeWithContext : Node<TestRenderContext>() {
-    override fun render(builder: SpannableStringBuilder, renderContext: TestRenderContext) {
-      builder.append(renderContext.string)
-    }
+class FooRule : Rule<Any?, Node<Any?>>(Pattern.compile("^<Foo>")) {
+  override fun parse(matcher: Matcher, parser: Parser<Any?, in Node<Any?>>, isNested: Boolean): ParseSpec<Any?, Node<Any?>> {
+    return ParseSpec.createTerminal(TextNode("Bar"))
   }
+}
 
-  class UserNode(val userId: Int) : Node<Any?>()
-
-  class UserMentionRule : Rule<Any?, UserNode>(Pattern.compile("^<(\\d+)>")) {
-    override fun parse(matcher: Matcher, parser: Parser<Any?, in UserNode>, isNested: Boolean): ParseSpec<Any?, UserNode> {
-      return ParseSpec.createTerminal(UserNode(matcher.group(1).toInt()))
-    }
+data class RenderContext(val usernameMap: Map<Int, String>)
+class UserNode(private val userId: Int) : Node<RenderContext>() {
+  override fun render(builder: SpannableStringBuilder, renderContext: RenderContext) {
+    builder.append(renderContext.usernameMap[userId] ?: "Invalid User")
   }
+}
 
-  val parserTest = Parser<Any?, Node<Any?>>()
-      .addRule(UserMentionRule())
-      .addRules(SimpleMarkdownRules.createSimpleMarkdownRules())
+class UserMentionRule : Rule<RenderContext, UserNode>(Pattern.compile("^<(\\d+)>")) {
+  override fun parse(matcher: Matcher, parser: Parser<RenderContext, in UserNode>, isNested: Boolean): ParseSpec<RenderContext, UserNode> {
+    return ParseSpec.createTerminal(UserNode(matcher.group(1).toInt()))
+  }
+}
 }
 
