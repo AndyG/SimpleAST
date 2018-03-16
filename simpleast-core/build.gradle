@@ -5,7 +5,7 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
 group = 'com.discord'
-version = '1.0.0'
+version = '1.0.0-alpha1'
 
 def pomConfig = {
     licenses {
@@ -112,6 +112,7 @@ bintray {
         repo = 'android'
         name = 'SimpleAST'
         userOrg = 'discord'
+        desc = 'Extensible Android library for both parsing text into Abstract Syntax Trees and rendering those trees as rich text.'
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/angarron/SimpleAST.git'
         publicDownloadNumbers = true
